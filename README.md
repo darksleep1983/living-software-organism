@@ -2,13 +2,30 @@
 
 [Русская версия](README.ru.md)
 
-**Project-owned identity, memory, health, recovery and verified evolution for AI-assisted software.**
+**Project-owned continuity, health and recovery for AI-assisted software.**
 
-Living Software Organism (LSO) is a pre-release architecture and reference implementation for software projects that need to outlive any one AI session, model, provider, or executor.
+Living Software Organism (LSO) is a public pre-release architecture and reference implementation for software projects that need to outlive any one AI session, model, provider, or executor.
+
+If you alternate between Codex, Claude, Gemini, OpenHands, local agents, or cloud executors, the project should not depend on whichever agent currently remembers the most context. LSO keeps durable project truth in project-owned state and derives health and recovery evidence from inspectable files and contracts.
 
 The central idea is simple:
 
 > **The software project is the durable organism. AI models, providers and executors are replaceable temporary organs.**
+
+## What problem does it solve?
+
+AI agents are good at local work, but a chat transcript is a weak place to store project identity and authority.
+
+Long-lived AI-assisted projects need a way to answer:
+
+- What is the project, and what is authoritative right now?
+- Which agent claims are backed by direct evidence?
+- Is current state healthy, degraded, stale, or inconsistent?
+- What repair is proposed, and who is allowed to authorize it?
+- Can the project be reconstructed from known source and continuity evidence?
+- Can one agent hand work to another without turning an old summary into truth?
+
+LSO treats those as project-owned questions instead of model-owned memory.
 
 This repository is the complete stack:
 
@@ -49,11 +66,13 @@ Current imported identity is preserved:
 - Project Corpus remains independently usable
 - its existing MIT license remains scoped to that component
 
+The former standalone [project-corpus repository](https://github.com/darksleep1983/project-corpus) is now archived as a historical/reference source and redirects active development here.
+
 ### Living Software Organism
 
 [components/organism/](components/organism/)
 
-A Node.js reference implementation of bounded organism contracts.
+A dependency-free CommonJS Node.js reference implementation of bounded organism contracts.
 
 Accepted architecture lineage:
 
@@ -71,7 +90,7 @@ This monorepo does not promote them to v0.8.
 
 ## Five-minute local tour
 
-No unified package is published yet.
+The GitHub source repository is public. No unified npm/PyPI umbrella package is published yet.
 
 From the repository root:
 
@@ -87,15 +106,22 @@ See [Getting Started](docs/getting-started.md) for component-specific commands.
 
 LSO does not grant itself authority over a project. It does not autonomously repair, dispatch work, execute generic shell commands, delete project files, restore live state, switch AI providers, buy services, or publish externally.
 
-Derived health and recovery status are evidence, not authority. A hash proves covered bytes, not durable reacquisition. Local clean-clone evidence does not prove fresh-machine, cross-OS, or bitwise recovery.
+Derived health and recovery status are evidence, not authority. A hash proves covered bytes, not durable reacquisition. A successful fresh Git clone proves repository reacquisition at that point in time, not indefinite remote availability or complete recovery of every external dependency.
 
 ## Maturity
 
-This is a **pre-release unified monorepo**.
+This is a **public pre-release unified monorepo**.
 
 Project Corpus is the mature substrate component with its existing Protocol/Runtime releases. The organism layer remains a reference implementation with accepted architectural contracts through v0.7 and experimental unversioned extensions.
 
-Remote CI for the unified repository has not yet run.
+Repository publication has been independently verified with:
+
+- GitHub CI across Windows, Ubuntu and macOS for Project Corpus;
+- Node 26 organism checks on Windows and Ubuntu;
+- full-stack integration and strict docs checks;
+- a true fresh clone from GitHub with committed-byte and history verification.
+
+This is repository-level publication evidence, not a claim of production adoption or fully automated fresh-machine recovery for arbitrary consuming projects.
 
 ## Licensing
 

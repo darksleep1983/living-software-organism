@@ -2,13 +2,30 @@
 
 [English](README.md)
 
-**Собственная идентичность, память, здоровье, восстановление и проверяемое развитие программного проекта в эпоху ИИ.**
+**Непрерывность, здоровье и восстановление программного проекта, которыми владеет сам проект, а не конкретный ИИ.**
 
-Living Software Organism (LSO) - предварительная архитектура и reference implementation для проектов, которые должны жить дольше отдельного сеанса ИИ, модели, провайдера или исполнителя.
+Living Software Organism (LSO) - публичная pre-release архитектура и reference implementation для проектов, которые должны жить дольше отдельного сеанса ИИ, модели, провайдера или исполнителя.
+
+Если ты по очереди используешь Codex, Claude, Gemini, OpenHands, локальных или облачных агентов, проект не должен зависеть от того, какой агент сейчас помнит больше контекста. LSO хранит долговременную правду в состоянии, принадлежащем самому проекту, а health/recovery evidence выводит из проверяемых файлов и контрактов.
 
 Главный принцип:
 
 > **Устойчивый организм - сам программный проект. Модели ИИ, провайдеры и исполнители - заменяемые временные органы.**
+
+## Какую проблему это решает
+
+ИИ-агенты хорошо решают локальные задачи, но чат - плохое место для хранения идентичности и authority проекта.
+
+Долгоживущему AI-assisted проекту нужно уметь ответить:
+
+- Что это за проект и что сейчас является authority?
+- Какие заявления агента подтверждены прямыми evidence?
+- Текущее состояние healthy, degraded, stale или противоречивое?
+- Какой repair предлагается и кто имеет право его разрешить?
+- Можно ли восстановить проект из известного source и continuity evidence?
+- Может ли один агент передать работу другому, не превращая старый summary в истину?
+
+LSO делает эти вопросы собственностью проекта, а не памятью конкретной модели.
 
 Теперь это один полный репозиторий:
 
@@ -49,17 +66,31 @@ Vendor-neutral Markdown-first протокол долговременной ид
 - компонент можно использовать отдельно
 - его существующая MIT-лицензия остаётся лицензией именно этого компонента
 
+Бывший standalone-репозиторий [project-corpus](https://github.com/darksleep1983/project-corpus) теперь архивирован как исторический/reference источник и перенаправляет активную разработку сюда.
+
 ### Living Software Organism
 
 [components/organism/](components/organism/)
 
-Node.js reference implementation ограниченных organism contracts.
+Dependency-free CommonJS Node.js reference implementation ограниченных organism contracts.
 
-Принятая архитектурная линия: v0.1-v0.7. Новые Organ Systems остаются **экспериментальными и без версии**: Recovery Dependency Contract, Rebirth Capsule, Organ Readiness, Nervous System Tracing, Clean Organism / Autophagy, Supervision Tree и Reproducible Phenotype.
+Принятая архитектурная линия:
+
+- v0.1 Homeostasis
+- v0.2 Supervised Repair Contracts
+- v0.3 Supervised Capability Repair
+- v0.4 Verified Evolution / Immune Memory
+- v0.5 Metabolism / Resource Homeostasis
+- v0.6 Longitudinal Homeostasis / Health History
+- v0.7 Resilience / Recovery Readiness
+
+Новые Organ Systems остаются **экспериментальными и без версии**: Recovery Dependency Contract, Rebirth Capsule, Organ Readiness, Nervous System Tracing, Clean Organism / Autophagy, Supervision Tree и Reproducible Phenotype.
 
 Объединение в monorepo не делает их v0.8.
 
 ## Быстрый запуск
+
+Исходный GitHub-репозиторий публичный. Единый npm/PyPI umbrella package пока не опубликован.
 
 Из корня репозитория:
 
@@ -75,15 +106,22 @@ Full-stack smoke создаёт временный проект Project Corpus V
 
 LSO не назначает себя authority проекта. Он не выполняет автономный repair, не диспетчеризует работу, не предоставляет generic shell, не удаляет файлы проекта, не восстанавливает живое состояние, не переключает провайдеров ИИ, не оплачивает сервисы и не публикует что-либо наружу.
 
-Health и recovery status - evidence, а не разрешение действовать. Хеш доказывает только покрытые байты, а clean clone на одной машине не доказывает fresh-machine, cross-OS или bitwise recovery.
+Health и recovery status - evidence, а не разрешение действовать. Хеш доказывает только покрытые байты. Успешный fresh Git clone доказывает возможность получить репозиторий из конкретного remote в конкретный момент, но не гарантирует вечную доступность remote или полное восстановление всех внешних зависимостей любого проекта.
 
 ## Зрелость
 
-Это **pre-release unified monorepo**.
+Это **публичный pre-release unified monorepo**.
 
 Project Corpus остаётся зрелым substrate-компонентом со своими существующими версиями Protocol/Runtime. Organism layer остаётся reference implementation с принятой архитектурой до v0.7 и experimental unversioned расширениями.
 
-Удалённый CI единого репозитория ещё не запускался.
+Публикация репозитория независимо проверена:
+
+- GitHub CI для Project Corpus на Windows, Ubuntu и macOS;
+- Node 26 проверки organism layer на Windows и Ubuntu;
+- full-stack integration и strict docs checks;
+- настоящий fresh clone из GitHub с проверкой committed bytes и истории.
+
+Это evidence публикации самого репозитория, а не заявление о production adoption или полностью автоматическом fresh-machine recovery для любого подключённого проекта.
 
 ## Лицензии
 
