@@ -29,7 +29,7 @@ Organ Systems remain **experimental and unversioned**. This includes Recovery De
 
 This repository is an experimental public extraction, not a stable production release. Do not infer broad compatibility, full application recovery, fresh-machine reconstruction, or bitwise reproducibility from local checks.
 
-Publication is blocked by `LICENSE_DECISION_REQUIRED_BEFORE_PUBLICATION`. No license has been selected; package metadata is `UNLICENSED` and private. No remote repository or published package is created by this extraction.
+The organism component is licensed under the MIT License. Package metadata remains private development metadata because no npm package is published by this repository publication.
 
 ## Project Corpus relationship
 
@@ -63,4 +63,4 @@ LSO does not autonomously heal or dispatch work. It does not execute repair cont
 
 The living-ship idea in *LEXX* was a conceptual spark and metaphor only. LSO is an original software architecture with no affiliation, adaptation, runtime dependency, or copied fictional IP implied. See [design origin](docs/design-origin.md).
 
-No LSO license decision is recorded. A license must be explicitly decided before public publication; this repository does not include or imply one.
+LSO is licensed under the MIT License. See [LICENSE](LICENSE).

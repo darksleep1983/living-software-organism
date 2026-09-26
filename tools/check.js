@@ -30,9 +30,15 @@ const corpusPackage = fs.readFileSync(path.join(corpus, 'pyproject.toml'), 'utf8
 assert(corpusPackage.includes('name = "project-corpus"'), 'CORPUS_PACKAGE_IDENTITY');
 assert(corpusPackage.includes('version = "2.2.0"'), 'CORPUS_RUNTIME_VERSION');
 
+const rootPackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+assert.equal(rootPackage.license, 'MIT');
+assert(fs.existsSync(path.join(root, 'LICENSE')), 'ROOT_MIT_LICENSE_MISSING');
+
 const organismPackage = JSON.parse(fs.readFileSync(path.join(organism, 'package.json'), 'utf8'));
 assert.equal(organismPackage.version, '0.0.0-development');
 assert.equal(organismPackage.private, true);
+assert.equal(organismPackage.license, 'MIT');
+assert(fs.existsSync(path.join(organism, 'LICENSE')), 'ORGANISM_MIT_LICENSE_MISSING');
 
 const excludedAnywhere = new Set(['.git', 'node_modules', '__pycache__', '.pytest_cache', 'site', 'build', 'dist']);
 const excludedRootOnly = new Set(['.project-corpus', '.lso-runtime']);

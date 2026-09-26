@@ -3,7 +3,7 @@
   "version": "0.0.0-development",
   "private": true,
   "description": "Unified Project Corpus + Living Software Organism development workspace",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "check": "node tools/check.js",
     "test:integration": "node examples/full-stack/smoke.js",

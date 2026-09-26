@@ -3,7 +3,7 @@
   "version": "0.0.0-development",
   "private": true,
   "description": "Experimental project-owned organism contracts and deterministic evidence",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "src/index.js",
   "type": "commonjs",
   "engines": {

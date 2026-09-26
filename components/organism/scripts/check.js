@@ -13,9 +13,9 @@ function walk(dir) {
 }
 walk(root);
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
-assert(packageJson.private === true && packageJson.version === '0.0.0-development' && packageJson.license === 'UNLICENSED');
+assert(packageJson.private === true && packageJson.version === '0.0.0-development' && packageJson.license === 'MIT');
 assert(!packageJson.dependencies && !packageJson.devDependencies);
-assert(!fs.existsSync(path.join(root, 'LICENSE')));
+assert(fs.existsSync(path.join(root, 'LICENSE')), 'MIT_LICENSE_MISSING');
 const forbidden = [new RegExp('D:[\\\\/]Mon' + 'olith', 'i'), new RegExp('C:[\\\\/]Users[\\\\/]', 'i'), /(?:sk|ghp|github_pat)-[A-Za-z0-9_]{20,}/, /-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----/];
 for (const full of files) {
   const text = fs.readFileSync(full, 'utf8');
@@ -39,6 +39,6 @@ for (const full of files) {
 }
 for (const label of ['README.md','README.ru.md']) {
   const text = fs.readFileSync(path.join(root, label), 'utf8');
-  assert(text.includes('v0.7') && text.includes('LICENSE_DECISION_REQUIRED_BEFORE_PUBLICATION'));
+  assert(text.includes('v0.7') && text.includes('MIT License'));
 }
 console.log(JSON.stringify({result: 'PASS', public_files: files.length, checks: ['links','json','metadata','leak_patterns','core_imports','no_execution_network_polling_delete','maturity_license']}));

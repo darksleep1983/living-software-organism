@@ -89,9 +89,9 @@ Project Corpus остаётся зрелым substrate-компонентом с
 
 Импортированный Project Corpus сохраняет существующую MIT-лицензию в [components/project-corpus/LICENSE](components/project-corpus/LICENSE).
 
-Для umbrella repository и organism layer отдельная публичная лицензия Owner пока не выбрана.
+Umbrella repository и organism layer лицензированы по MIT License. Импортированный Project Corpus также остаётся MIT-лицензированным со своим сохранённым компонентным LICENSE.
 
-Подробнее: [LICENSING.md](LICENSING.md).
+Подробнее: [LICENSE](LICENSE) и [LICENSING.md](LICENSING.md).
 
 ## Документация
 

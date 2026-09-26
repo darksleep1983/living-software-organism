@@ -101,9 +101,9 @@ Remote CI for the unified repository has not yet run.
 
 The imported Project Corpus component retains its existing MIT license at [components/project-corpus/LICENSE](components/project-corpus/LICENSE).
 
-The umbrella repository and organism layer do **not yet have an Owner-selected public license**. Until that decision is made, they are not presented as licensed for public reuse.
+The umbrella repository and organism layer are licensed under the MIT License. The imported Project Corpus component remains MIT-licensed under its own preserved component license file.
 
-See [LICENSING.md](LICENSING.md).
+See [LICENSE](LICENSE) and [LICENSING.md](LICENSING.md).
 
 ## Documentation
 

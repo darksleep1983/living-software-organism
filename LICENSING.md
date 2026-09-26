@@ -1,25 +1,13 @@
-# Licensing status
+# Licensing
 
-This monorepo currently has a mixed, intentionally explicit licensing state.
+Living Software Organism is licensed under the MIT License.
+
+The root [LICENSE](LICENSE) applies to the umbrella repository, including the organism layer and root integration/documentation code, except where an embedded component carries its own license notice.
 
 ## Project Corpus component
 
-components/project-corpus/ was imported from the existing Project Corpus project and retains its existing MIT license.
+components/project-corpus/ was imported from the existing Project Corpus project and retains its existing MIT license and attribution.
 
 See components/project-corpus/LICENSE.
 
-That license applies to the Project Corpus component according to its existing project history and files.
-
-## Organism layer and umbrella files
-
-No Owner-selected public license has yet been assigned to:
-
-- components/organism/
-- root umbrella documentation and integration code
-- future unified releases of Living Software Organism
-
-Until an explicit Owner decision is recorded, these parts remain unlicensed for public reuse.
-
-Publication gate: LICENSE_DECISION_REQUIRED_BEFORE_PUBLICATION.
-
-Do not infer that the Project Corpus MIT license automatically relicenses the independent organism implementation or umbrella repository.
+Both the umbrella repository and the Project Corpus component are MIT-licensed. Their separate license files are preserved so component provenance and attribution remain explicit.
