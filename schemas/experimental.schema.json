@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lso:experimental:organ-systems:1",
+  "title": "Unversioned project-owned LSO candidate declaration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema",
+    "status",
+    "scope",
+    "project_id",
+    "physical_root",
+    "substrate_sha256",
+    "source",
+    "dependencies",
+    "data",
+    "recipe",
+    "phenotype",
+    "organs",
+    "roots",
+    "objects",
+    "runtime"
+  ],
+  "properties": {
+    "kind": {
+      "const": "organ_systems_candidate"
+    },
+    "schema": {
+      "const": 1
+    },
+    "status": {
+      "const": "PENDING_SUPERVISOR_REVIEW"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "physical_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "substrate_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "commit",
+        "files",
+        "reacquisition"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "BOUND",
+            "UNBOUND",
+            "UNKNOWN"
+          ]
+        },
+        "reacquisition": {
+          "const": "UNPROVEN",
+          "description": "Local integrity and base HEAD never prove durable reacquisition. No positive durable-origin verifier is implemented by this candidate."
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            }
+          ]
+        },
+        "files": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "class",
+          "required",
+          "probe",
+          "reconstruction_probe",
+          "note"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "class": {
+            "enum": [
+              "runtime",
+              "build",
+              "platform",
+              "external_service"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "probe": {
+            "$ref": "#/$defs/probe"
+          },
+          "reconstruction_probe": {
+            "$ref": "#/$defs/probe"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      }
+    },
+    "data": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "class",
+          "required"
+        ],
+        "properties": {
+          "path": {
+            "$ref": "#/$defs/path"
+          },
+          "class": {
+            "enum": [
+              "DURABLE",
+              "GENERATED",
+              "CACHE"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "recipe": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "phenotype": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "required",
+          "probe"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "probe": {
+            "$ref": "#/$defs/probe"
+          }
+        }
+      }
+    },
+    "organs": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "parent",
+          "required",
+          "dependencies",
+          "children"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/id"
+              }
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "dependencies": {
+            "$ref": "#/$defs/ids"
+          },
+          "children": {
+            "$ref": "#/$defs/ids"
+          }
+        }
+      }
+    },
+    "roots": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/path"
+      }
+    },
+    "objects": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "class",
+          "references",
+          "operation_ephemeral"
+        ],
+        "properties": {
+          "path": {
+            "$ref": "#/$defs/path"
+          },
+          "class": {
+            "enum": [
+              "CANONICAL",
+              "DURABLE",
+              "RUNTIME",
+              "CACHE",
+              "TEMP",
+              "SUPERSEDED",
+              "ORPHANED",
+              "UNKNOWN"
+            ]
+          },
+          "references": {
+            "type": "array",
+            "maxItems": 256,
+            "items": {
+              "$ref": "#/$defs/path"
+            }
+          },
+          "operation_ephemeral": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "runtime": {
+      "$ref": "#/$defs/path"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "pattern": "^(?!/)(?!.*[:\\\\])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*\\u0000)[^/]+(?:/[^/]+)*$"
+    },
+    "ids": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "probe": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "unavailable"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "path"
+          ],
+          "properties": {
+            "kind": {
+              "const": "file"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "kind": {
+              "const": "sha256"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "sha256": {
+              "$ref": "#/$defs/hash"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "path",
+            "keys"
+          ],
+          "properties": {
+            "kind": {
+              "const": "json"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "keys": {
+              "type": "array",
+              "maxItems": 32,
+              "items": {
+                "type": "string",
+                "maxLength": 127
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

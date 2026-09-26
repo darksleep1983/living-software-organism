@@ -1,0 +1,25 @@
+{
+  "name": "living-software-organism",
+  "version": "0.0.0-development",
+  "private": true,
+  "description": "Experimental project-owned organism contracts and deterministic evidence",
+  "license": "UNLICENSED",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "smoke": "node examples/smoke.js",
+    "check": "node scripts/check.js"
+  },
+  "files": [
+    "src",
+    "schemas",
+    "docs",
+    "examples",
+    "README.md",
+    "README.ru.md"
+  ]
+}

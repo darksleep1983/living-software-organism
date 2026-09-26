@@ -1,0 +1,16 @@
+name: Proposed standalone checks
+on: [push, pull_request]
+jobs:
+  check:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+      - run: npm test
+      - run: npm run smoke
+      - run: npm run check

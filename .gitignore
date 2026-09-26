@@ -1,0 +1,9 @@
+.project-corpus/
+.lso-runtime/
+node_modules/
+coverage/
+*.log
+*.tmp
+.env
+.env.*
+dist/
