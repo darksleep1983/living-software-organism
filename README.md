@@ -1,66 +1,118 @@
 # Living Software Organism
 
-Living Software Organism (LSO) is an experimental, pre-release reference implementation of project-level health, continuity, bounded recovery, and evidence-based evolution contracts.
+[Русская версия](README.ru.md)
 
-## What it is and why it exists
+**Project-owned identity, memory, health, recovery and verified evolution for AI-assisted software.**
 
-A software project outlives any one AI session. Its identity, rules, and history should remain with the project while models, providers, and executors can change. LSO gives a project a small set of explicit contracts for checking whether its declared identity is coherent, recording health changes, and describing supervised repair or recovery evidence.
+Living Software Organism (LSO) is a pre-release architecture and reference implementation for software projects that need to outlive any one AI session, model, provider, or executor.
 
-The central principle is: **the software project is the durable organism; AI models, providers, and executors are replaceable temporary organs.** LSO is intended to preserve project identity across sessions and tools, assess health from fresh evidence, and reason about bounded recovery without treating an AI system as the project's owner.
+The central idea is simple:
 
-## What it contains
+> **The software project is the durable organism. AI models, providers and executors are replaceable temporary organs.**
 
-The stable reference architecture covers:
+This repository is the complete stack:
 
-- Homeostasis: a derived `STABLE`, `DEGRADED`, or `UNHEALTHY` view.
-- Supervised repair contracts and explicit capability binding. Contracts describe bounded intent; they do not run it.
-- Immune Memory: candidate lessons derived only from accepted evidence.
-- Metabolism: explicit resource budgets and observations.
-- Health History: change-only records of observed health projections.
-- Recovery Readiness: bounded evidence about declared canonical inputs.
+    Living Software Organism
+    ├── Project Corpus
+    │   identity · continuity · authority · Tasks · Reports · context
+    │
+    └── Organism layer
+        health · supervised repair · immune memory · metabolism
+        history · recovery · readiness · tracing · hygiene
+        supervision · phenotype
 
-The Node.js library exposes responsibility namespaces for `homeostasis`, `repair`, `capabilities`, `immune`, `metabolism`, `history`, `recovery`, and `experimental`. A context uses an explicit absolute project root, project ID, optional relative runtime directory, and adapter. For a Project Corpus Protocol V2 layout, construct the adapter with `projectCorpusAdapter()` and pass it to `createContext({ root, projectId, runtime: '.lso-runtime', adapter })`. An alternate adapter can provide `read(ctx)` without requiring Project Corpus or its optional Python Runtime. See [the API guide](docs/api.md) for exports and examples.
+## Why two layers?
+
+A project first needs to know what it is, what is authoritative, what is current, and what happened. That is Project Corpus.
+
+Only then does it make sense to ask whether the project is healthy, what drifted, whether it can recover, what evidence is fresh, and what should survive. That is the organism layer.
+
+They are integrated without collapsing their authority boundaries:
+
+- **Project Corpus can be used by itself.**
+- **The organism layer can use another explicit adapter.**
+- **Project Corpus + LSO is the recommended complete stack.**
+
+## Components
+
+### Project Corpus
+
+[components/project-corpus/](components/project-corpus/)
+
+A vendor-neutral, Markdown-first protocol for durable project identity, continuity and authority, with an optional Python Runtime.
+
+Current imported identity is preserved:
+
+- Project Corpus Protocol 2.0
+- optional Python Runtime 2.2.0
+- Python package/import identity remains project-corpus / project_corpus
+- Project Corpus remains independently usable
+- its existing MIT license remains scoped to that component
+
+### Living Software Organism
+
+[components/organism/](components/organism/)
+
+A Node.js reference implementation of bounded organism contracts.
+
+Accepted architecture lineage:
+
+- v0.1 Homeostasis
+- v0.2 Supervised Repair Contracts
+- v0.3 Supervised Capability Repair
+- v0.4 Verified Evolution / Immune Memory
+- v0.5 Metabolism / Resource Homeostasis
+- v0.6 Longitudinal Homeostasis / Health History
+- v0.7 Resilience / Recovery Readiness
+
+The newer Organ Systems remain **experimental and unversioned**: Recovery Dependency Contract, Rebirth Capsule, Organ Readiness, Nervous System Tracing, Clean Organism / Autophagy, Supervision Tree, and Reproducible Phenotype.
+
+This monorepo does not promote them to v0.8.
+
+## Five-minute local tour
+
+No unified package is published yet.
+
+From the repository root:
+
+    node examples/full-stack/smoke.js
+    node tools/check.js
+    node tools/verify.js
+
+The full-stack smoke creates a temporary Project Corpus V2 project, loads it through the real LSO Project Corpus adapter, derives health and recovery evidence, confirms that restore authority remains false, and removes its temporary state.
+
+See [Getting Started](docs/getting-started.md) for component-specific commands.
+
+## What this system does not do
+
+LSO does not grant itself authority over a project. It does not autonomously repair, dispatch work, execute generic shell commands, delete project files, restore live state, switch AI providers, buy services, or publish externally.
+
+Derived health and recovery status are evidence, not authority. A hash proves covered bytes, not durable reacquisition. Local clean-clone evidence does not prove fresh-machine, cross-OS, or bitwise recovery.
 
 ## Maturity
 
-The accepted reference architecture is v0.1 through v0.7: Homeostasis; Supervised Repair Contracts; Supervised Capability Repair; Verified Evolution / Immune Memory; Metabolism; Longitudinal Homeostasis / Health History; and Resilience / Recovery Readiness.
+This is a **pre-release unified monorepo**.
 
-Organ Systems remain **experimental and unversioned**. This includes Recovery Dependency Contract, Rebirth Capsule, Organ Readiness, Nervous System Tracing, Clean Organism / Autophagy, Supervision Tree, and Reproducible Phenotype. The Human System Map is documentation, not a runtime stage. Extraction does not promote the architecture to v0.8.
+Project Corpus is the mature substrate component with its existing Protocol/Runtime releases. The organism layer remains a reference implementation with accepted architectural contracts through v0.7 and experimental unversioned extensions.
 
-This repository is an experimental public extraction, not a stable production release. Do not infer broad compatibility, full application recovery, fresh-machine reconstruction, or bitwise reproducibility from local checks.
+Remote CI for the unified repository has not yet run.
 
-Publication is blocked by `LICENSE_DECISION_REQUIRED_BEFORE_PUBLICATION`. No license has been selected; package metadata is `UNLICENSED` and private. No remote repository or published package is created by this extraction.
+## Licensing
 
-## Project Corpus relationship
+The imported Project Corpus component retains its existing MIT license at [components/project-corpus/LICENSE](components/project-corpus/LICENSE).
 
-Project Corpus is one optional durable identity and continuity substrate. LSO can consume it through a small reference adapter, while an explicit alternate adapter can supply equivalent project data. The project remains the owner of its semantics and canonical state; LSO does not copy or replace the Project Corpus protocol. Core deterministic operations do not require a database, network access, a particular AI provider, or the optional Project Corpus Python Runtime.
+The umbrella repository and organism layer do **not yet have an Owner-selected public license**. Until that decision is made, they are not presented as licensed for public reuse.
 
-## Try it locally
+See [LICENSING.md](LICENSING.md).
 
-The development baseline is Node.js 26 or newer. The package is private development metadata and is not published.
+## Documentation
 
-```sh
-npm test
-npm run smoke
-npm run check
-```
+- [Getting Started](docs/getting-started.md)
+- [Unified Architecture](docs/architecture.md)
+- [Import provenance](docs/provenance.md)
+- [Project Corpus component](components/project-corpus/README.md)
+- [Organism component](components/organism/README.md)
+- [Organism safety boundaries](components/organism/docs/safety.md)
+- [Recovery and provenance](components/organism/docs/recovery.md)
 
-The programmatic entry point accepts a context created from an explicit project root and adapter. See [docs/api.md](docs/api.md) for exports and examples, [docs/architecture.md](docs/architecture.md) for module boundaries, and [docs/safety.md](docs/safety.md) for limits. Generated evidence belongs under the configured project-local runtime directory, which defaults to `.lso-runtime`.
-
-## What LSO does not do
-
-LSO does not autonomously heal or dispatch work. It does not execute repair contracts, run shell commands, poll in the background, start a server, delete project files, back up or restore live state, overwrite canonical files, switch providers, purchase services, or publish externally. A readiness result is not restore permission. A local hash or Git commit is not proof that every current byte can be reacquired elsewhere.
-
-## Further reading
-
-- [Architecture](docs/architecture.md)
-- [Safety boundaries](docs/safety.md)
-- [Project Corpus integration](docs/project-corpus.md)
-- [Recovery and provenance](docs/recovery.md)
-- [Experimental systems](docs/experimental.md)
-- [Design origin](docs/design-origin.md)
-- [API guide](docs/api.md)
-
-The living-ship idea in *LEXX* was a conceptual spark and metaphor only. LSO is an original software architecture with no affiliation, adaptation, runtime dependency, or copied fictional IP implied. See [design origin](docs/design-origin.md).
-
-No LSO license decision is recorded. A license must be explicitly decided before public publication; this repository does not include or imply one.
+The living-ship idea in LEXX was a conceptual spark and metaphor only. Living Software Organism is an original software architecture; no affiliation, adaptation, runtime dependency, or copied fictional IP is implied.

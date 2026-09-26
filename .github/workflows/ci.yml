@@ -1,16 +1,68 @@
-name: Proposed standalone checks
-on: [push, pull_request]
+name: unified checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
 jobs:
-  check:
+  corpus:
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONPATH: src
+    defaults:
+      run:
+        working-directory: components/project-corpus
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest discover -s tests -v
+
+  organism:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: components/organism
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: ['26']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm test
+      - run: npm run smoke
+      - run: npm run check
+
+  integration:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '26'
-      - run: npm test
-      - run: npm run smoke
-      - run: npm run check
+      - run: node examples/full-stack/smoke.js
+      - run: node tools/check.js
+
+  corpus-docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: components/project-corpus
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r docs/requirements.txt
+      - run: mkdocs build --strict

@@ -1,4 +1,4 @@
-.project-corpus/
+/.project-corpus/
 .lso-runtime/
 node_modules/
 coverage/
@@ -6,4 +6,10 @@ coverage/
 *.tmp
 .env
 .env.*
+__pycache__/
+*.py[cod]
+.pytest_cache/
+site/
+build/
 dist/
+*.egg-info/

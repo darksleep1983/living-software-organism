@@ -1,0 +1,61 @@
+# Project Corpus
+
+**Durable project identity, continuity and authority for AI-assisted work.**
+
+AI sessions end; the project should not have to start from scratch. Project
+Corpus is a Markdown-first, vendor-neutral protocol that records what a project
+is, where it is now, what has been verified, what comes next, and which rules
+govern change.
+
+![Project Corpus connects one AI session to the next through canonical project state.](assets/social-preview.svg)
+
+## In 30 seconds
+
+Project Corpus gives a project an owned, inspectable source for identity,
+current state, evidence, authority, and next actions across AI sessions. The
+Protocol works as ordinary Markdown with no installation, database, or MCP
+server. An optional local Runtime adds validation, external owner trust, policy
+enforcement, verified writes, audit/recovery, CLI, and a local stdio MCP adapter.
+
+## Start manually
+
+Copy the [V2 minimal template](https://github.com/darksleep1983/project-corpus/tree/main/templates/v2/minimal)
+into a project, fill `PROJECT.md` and `STATUS.md`, then give the agent the
+project folder or upload the canonical files. The [Quick Start](quickstart.md)
+has the exact paths and a ready-to-use loading prompt.
+
+## Choose the layer you need
+
+| Project Corpus Protocol | Optional Project Corpus Runtime |
+| --- | --- |
+| Markdown-first and vendor-neutral | Controlled CLI and local stdio MCP |
+| No installation required | External owner trust and policy enforcement |
+| Manual and direct-folder workflows | Verified transactions, audit, and recovery |
+
+The Runtime implements the Protocol; it never silently defines or broadens it.
+For security and platform boundaries, start with the [security model](security.md).
+
+Higher-level lifecycle, recovery, or orchestration systems can build on Project
+Corpus while retaining their own contracts. Living Software Organism is one
+independent reference direction; Project Corpus is not LSO and does not require
+it.
+
+## Context Intelligence 2.2.0
+
+Canonical Markdown → Rebuildable Context Index → Authority/temporal retrieval →
+Bounded Context Bundle → Any AI agent.
+
+Markdown remains the truth. Context Intelligence helps an agent find the right
+truth. This optional Runtime feature returns source-backed, non-authoritative
+context; the agent must read the primary files before making authority claims.
+See the [Context Intelligence guide](runtime/context.md).
+
+## Existing V1 projects
+
+V1 remains supported. The V2 migration path plans changes read-only and creates
+a separate V2 destination without rewriting V1 templates. See
+[Migration](migration/v1-read-only-planner.md).
+
+The documentation site is an English-first reference. The repository keeps
+[Russian documentation](https://github.com/darksleep1983/project-corpus/blob/main/README.ru.md)
+alongside English source documentation.
