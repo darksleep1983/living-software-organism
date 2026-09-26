@@ -194,7 +194,7 @@ function readiness(scope,c,options = {}) {
   return {kind:'organ_readiness', alive, state, reason, health_separate:true, capsule_state:cap && cap.state, automatic_action:false};
 }
 function protectedPath(ref) {
-  return ref==='AGENTS.md' || /^\.project-corpus\/(state|tasks|reports|history)(\/|$)/.test(ref) || /^(src|test|docs|examples)(\/|$)/.test(ref);
+  return ref==='AGENTS.md' || ref==='.project-corpus/policy.toml' || /^\.project-corpus\/(state|tasks|reports|history)(\/|$)/.test(ref) || /^(src|test|docs|examples)(\/|$)/.test(ref);
 }
 function validateHygiene(c) {
   for(const root of c.roots) relative(root);

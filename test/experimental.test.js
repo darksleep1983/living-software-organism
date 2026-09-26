@@ -91,6 +91,8 @@ try {
   const invalid=clone(c);invalid.organs[0].dependencies=['absent'];rejected(()=>o.capsule(ctx,invalid,options),'UNKNOWN_DEPENDENCY');
   const durable=clone(c);durable.objects[1].class='TEMP';rejected(()=>o.hygiene(ctx,durable,options),'DURABLE_DISPOSABLE');
   const protectedObject=clone(c);protectedObject.objects[0].class='CACHE';rejected(()=>o.hygiene(ctx,protectedObject,options),'PROTECTED_DISPOSABLE');
+  const protectedPolicy=clone(c);protectedPolicy.objects.push({path:'.project-corpus/policy.toml',class:'CACHE',references:[],operation_ephemeral:false});
+  rejected(()=>o.hygiene(ctx,protectedPolicy,options),'PROTECTED_DISPOSABLE');
   const before=o.fileHash(path.join(root,'data/user.txt'));
   const hygiene=o.hygiene(ctx,c,options);assert(hygiene.dry_run && !hygiene.deletion_authorized);
   assert(hygiene.debt.includes('leftover.txt'));assert.equal(hygiene.items[3].cleanup_candidate,false);
