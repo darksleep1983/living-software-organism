@@ -42,6 +42,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm test
       - run: npm run smoke
+      - run: npm run demo
+      - run: npm run pack:smoke
       - run: npm run check
 
   integration:

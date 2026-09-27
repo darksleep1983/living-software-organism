@@ -5,7 +5,10 @@
   "description": "Unified Project Corpus + Living Software Organism development workspace",
   "license": "MIT",
   "scripts": {
+    "test": "node tools/verify.js",
     "check": "node tools/check.js",
+    "demo": "npm --prefix components/organism run demo",
+    "pack:organism": "npm --prefix components/organism run pack:smoke",
     "test:integration": "node examples/full-stack/smoke.js",
     "verify": "node tools/verify.js"
   }
