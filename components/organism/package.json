@@ -1,25 +1,32 @@
 {
   "name": "living-software-organism",
-  "version": "0.0.0-development",
-  "private": true,
-  "description": "Experimental project-owned organism contracts and deterministic evidence",
+  "version": "0.1.0-rc.1",
+  "description": "Project-owned continuity, health and recovery evidence for AI-assisted software projects",
   "license": "MIT",
   "main": "src/index.js",
   "type": "commonjs",
+  "bin": {
+    "lso": "cli.js"
+  },
   "engines": {
     "node": ">=26"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
     "smoke": "node examples/smoke.js",
-    "check": "node scripts/check.js"
+    "check": "node scripts/check.js",
+    "demo": "node examples/productization-demo.js",
+    "pack:smoke": "node scripts/pack-smoke.js"
   },
   "files": [
+    "cli.js",
     "src",
     "schemas",
+    "templates",
     "docs",
     "examples",
     "README.md",
-    "README.ru.md"
+    "README.ru.md",
+    "LICENSE"
   ]
 }

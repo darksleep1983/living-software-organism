@@ -27,11 +27,13 @@ run('Project Corpus tests', python, ['-m','unittest','discover','-s','tests','-v
   PYTHONPATH: path.join(corpus, 'src')
 });
 
-for (const file of ['context.test.js','recovery.test.js','stable.test.js','experimental.test.js']) {
+for (const file of ['context.test.js','recovery.test.js','stable.test.js','experimental.test.js','cli.test.js']) {
   run('Organism ' + file, process.execPath, [path.join('test', file)], organism);
 }
 
 run('Organism smoke', process.execPath, [path.join('examples','smoke.js')], organism);
+run('Productization demo', process.execPath, [path.join('examples','productization-demo.js')], organism);
+run('Local npm-pack consumer smoke', process.execPath, [path.join('scripts','pack-smoke.js')], organism);
 run('Organism static checks', process.execPath, [path.join('scripts','check.js')], organism);
 run('Full-stack integration', process.execPath, [path.join('examples','full-stack','smoke.js')], root);
 run('Unified repository checks', process.execPath, [path.join('tools','check.js')], root);

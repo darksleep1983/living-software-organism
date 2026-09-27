@@ -13,8 +13,11 @@ function walk(dir) {
 }
 walk(root);
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
-assert(packageJson.private === true && packageJson.version === '0.0.0-development' && packageJson.license === 'MIT');
+assert.equal(packageJson.name, 'living-software-organism');
+assert(packageJson.private !== true && packageJson.version === '0.1.0-rc.1' && packageJson.license === 'MIT');
+assert(packageJson.bin && packageJson.bin.lso === 'cli.js');
 assert(!packageJson.dependencies && !packageJson.devDependencies);
+assert(fs.existsSync(path.join(root, 'cli.js')) && fs.existsSync(path.join(root,'schemas','lso.config.schema.json')) && fs.existsSync(path.join(root,'templates','v2','minimal','.project-corpus','state','PROJECT.md')));
 assert(fs.existsSync(path.join(root, 'LICENSE')), 'MIT_LICENSE_MISSING');
 const forbidden = [new RegExp('D:[\\\\/]Mon' + 'olith', 'i'), new RegExp('C:[\\\\/]Users[\\\\/]', 'i'), /(?:sk|ghp|github_pat)-[A-Za-z0-9_]{20,}/, /-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----/];
 for (const full of files) {

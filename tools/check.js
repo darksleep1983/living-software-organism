@@ -33,10 +33,15 @@ assert(corpusPackage.includes('version = "2.2.0"'), 'CORPUS_RUNTIME_VERSION');
 const rootPackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 assert.equal(rootPackage.license, 'MIT');
 assert(fs.existsSync(path.join(root, 'LICENSE')), 'ROOT_MIT_LICENSE_MISSING');
+assert.equal(rootPackage.scripts.test, 'node tools/verify.js');
+assert.equal(rootPackage.scripts.check, 'node tools/check.js');
+assert(rootPackage.scripts.demo && rootPackage.scripts['pack:organism']);
 
 const organismPackage = JSON.parse(fs.readFileSync(path.join(organism, 'package.json'), 'utf8'));
-assert.equal(organismPackage.version, '0.0.0-development');
-assert.equal(organismPackage.private, true);
+assert.equal(organismPackage.name, 'living-software-organism');
+assert.equal(organismPackage.version, '0.1.0-rc.1');
+assert.equal(organismPackage.private, undefined);
+assert.equal(organismPackage.bin.lso, 'cli.js');
 assert.equal(organismPackage.license, 'MIT');
 assert(fs.existsSync(path.join(organism, 'LICENSE')), 'ORGANISM_MIT_LICENSE_MISSING');
 
