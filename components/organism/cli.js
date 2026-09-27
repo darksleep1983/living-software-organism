@@ -87,7 +87,7 @@ function validateConfig(c) {
 }
 function validRemote(value) {
   if (typeof value !== 'string' || value.length > 2048 || /[\r\n\0]/.test(value) || /(?:^|\/\/)[^/@]+:[^/@]+@/.test(value)) return false;
-  return /^file:\/\/\/(?:[A-Za-z]:\/)?[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^https:\/\/[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^ssh:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^git@[A-Za-z0-9.-]+:[A-Za-z0-9._/-]+(?:\.git)?$/.test(value);
+  return /^file:\/\/\/(?:[A-Za-z]:\/)?[A-Za-z0-9._~/-]+(?:\.git)?$/.test(value) || /^https:\/\/[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^ssh:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^git@[A-Za-z0-9.-]+:[A-Za-z0-9._/-]+(?:\.git)?$/.test(value);
 }
 function safeRepoPath(ref) {
   try { safePaths.relative(ref); }
