@@ -1,6 +1,6 @@
 {
   "name": "living-software-organism",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "description": "Project-owned continuity, health and recovery evidence for AI-assisted software projects",
   "license": "MIT",
   "main": "src/index.js",
@@ -16,7 +16,8 @@
     "smoke": "node examples/smoke.js",
     "check": "node scripts/check.js",
     "demo": "node examples/productization-demo.js",
-    "pack:smoke": "node scripts/pack-smoke.js"
+    "pack:smoke": "node scripts/pack-smoke.js",
+    "test:installed-bin": "node scripts/pack-smoke.js"
   },
   "files": [
     "cli.js",

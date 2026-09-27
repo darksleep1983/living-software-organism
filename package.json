@@ -10,6 +10,7 @@
     "demo": "npm --prefix components/organism run demo",
     "pack:organism": "npm --prefix components/organism run pack:smoke",
     "test:integration": "node examples/full-stack/smoke.js",
-    "verify": "node tools/verify.js"
+    "verify": "node tools/verify.js",
+    "test:installed-bin": "npm --prefix components/organism run test:installed-bin"
   }
 }

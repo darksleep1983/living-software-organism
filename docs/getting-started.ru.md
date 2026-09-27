@@ -1,6 +1,6 @@
 # Начало работы
 
-Living Software Organism (LSO) добавляет ограниченные свидетельства здоровья и восстановления поверх непрерывности, принадлежащей проекту. Это локальный npm release candidate `0.1.0-rc.1`, пакет не опубликован. Требуются Node.js 26+ и npm.
+Living Software Organism (LSO) добавляет ограниченные свидетельства здоровья и восстановления поверх непрерывности, принадлежащей проекту. Исправленный npm release candidate: `0.1.0-rc.2`. Установка: `npm install living-software-organism@0.1.0-rc.2`, затем `npx lso`. Требуются Node.js 26+ и npm.
 
 ## Подключение за пять минут из исходного репозитория
 
@@ -14,7 +14,7 @@ npm pack ./components/organism --pack-destination .
 
 ```sh
 cd /путь/к/вашему-проекту
-npm install --no-save /путь/к/living-software-organism-0.1.0-rc.1.tgz
+npm install --no-save /путь/к/living-software-organism-0.1.0-rc.2.tgz
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -60,6 +60,6 @@ Demo создаёт обычный временный проект, инициа
 
 ## Границы версий и ограничения
 
-Версия пакета не равна версии архитектуры: пакет `0.1.0-rc.1`, принятая архитектура LSO v0.1–v0.7, экспериментальные органы без версии, Project Corpus Protocol 2.0 и optional Runtime 2.2.0. Публикации npm в рамках этой работы нет.
+Версия пакета не равна версии архитектуры: пакет `0.1.0-rc.2`, принятая архитектура LSO v0.1–v0.7, экспериментальные органы без версии, Project Corpus Protocol 2.0 и optional Runtime 2.2.0. Пакет остаётся prerelease; `next` выбирает текущий RC. До отдельного выпуска stable `latest` также может указывать на проверенный RC.
 
 LSO не доказывает неописанные build inputs, секреты, сервисы времени выполнения, внешние данные или среду deployment. Он не запускает build/test проекта. Проверка reacquisition явная; `doctor` не выполняет fetch. Подробнее: [руководство CLI](productization.ru.md), [архитектура](architecture.md), [API](../components/organism/docs/api.md), [безопасность](../components/organism/docs/safety.md).

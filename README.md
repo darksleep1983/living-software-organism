@@ -6,14 +6,14 @@
 
 ## Try the local release candidate in five minutes
 
-Requires Node.js 26+ and npm. The product package is a local candidate; it has not been published to npm.
+Requires Node.js 26+ and npm. Install the corrective npm release candidate `0.1.0-rc.2` in your project with `npm install living-software-organism@0.1.0-rc.2`, then use `npx lso`. The source-tarball workflow is also available below.
 
 Build it from this repository, then install the tarball into the project you want to adopt (use absolute path on Windows):
 
 ```sh
 npm pack ./components/organism --pack-destination .
 cd /path/to/your-project
-npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.1.tgz
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.2.tgz
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -31,7 +31,7 @@ From the repository root, run `npm test`, `npm run check`, `npm run demo`, and `
 
 The software project is the durable organism. Models, providers and executors are replaceable temporary organs. Project Corpus preserves project-owned identity, continuity and authority; the organism layer derives bounded health and recovery evidence without becoming authority.
 
-Package version `0.1.0-rc.1` is lifecycle metadata, not architecture version. Accepted architecture remains v0.1–v0.7; experimental Organ Systems remain unversioned—not v0.8. Project Corpus remains Protocol 2.0 with optional Python Runtime 2.2.0.
+Package version `0.1.0-rc.2` is lifecycle metadata, not architecture version. Accepted architecture remains v0.1–v0.7; experimental Organ Systems remain unversioned—not v0.8. Project Corpus remains Protocol 2.0 with optional Python Runtime 2.2.0.
 
 ## What LSO will not modify automatically
 

@@ -1,10 +1,10 @@
 # Product CLI, recovery and agent workflow
 
-LSO CLI is a dependency-light, read-only-by-default view over project-owned Project Corpus V2 evidence. Package `0.1.0-rc.1` is a local release candidate; it does not mean architecture v0.8. Stable architecture remains v0.1–v0.7; experimental organ systems are unversioned; Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
+LSO CLI is a dependency-light, read-only-by-default view over project-owned Project Corpus V2 evidence. Package `0.1.0-rc.2` is a corrective release candidate; it does not mean architecture v0.8. Stable architecture remains v0.1–v0.7; experimental organ systems are unversioned; Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
 
 ## Adoption
 
-From an ordinary existing project, install the local package candidate (see [Getting started](getting-started.md)). Run `lso init --dry-run` to inspect exact files, then `lso init` and approve interactively or use `--yes` to approve that deterministic plan. Init creates only the minimal Corpus substrate and `lso.config.json`; it does not install dependencies, execute scripts, or commit. Existing partial/incompatible Corpus state and canonical-file conflicts fail closed. `--json` is machine readable; dry-run makes no writes.
+From an ordinary existing project, install the release candidate (see [Getting started](getting-started.md)). Run `lso init --dry-run` to inspect exact files, then `lso init` and approve interactively or use `--yes` to approve that deterministic plan. Init creates only the minimal Corpus substrate and `lso.config.json`; it does not install dependencies, execute scripts, or commit. Existing partial/incompatible Corpus state and canonical-file conflicts fail closed. `--json` is machine readable; dry-run makes no writes.
 
 ## Command reference
 

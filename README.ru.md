@@ -6,14 +6,14 @@
 
 ## Попробуйте локальный release candidate за пять минут
 
-Нужны Node.js 26+ и npm. Пакет — локальный кандидат; в npm он не опубликован.
+Нужны Node.js 26+ и npm. Исправленный release candidate: `0.1.0-rc.2`. Установите его в свой проект: `npm install living-software-organism@0.1.0-rc.2`, затем используйте `npx lso`. Ниже также описана установка tarball из исходников.
 
 Из корня этого репозитория соберите пакет и установите его в проект, который подключаете (в Windows укажите абсолютный путь к архиву):
 
 ```sh
 npm pack ./components/organism --pack-destination .
 cd /путь/к/вашему-проекту
-npm install --no-save /абсолютный/путь/к/living-software-organism-0.1.0-rc.1.tgz
+npm install --no-save /абсолютный/путь/к/living-software-organism-0.1.0-rc.2.tgz
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -31,7 +31,7 @@ npx lso recover rehearse
 
 Устойчивый организм — сам программный проект. Модели, провайдеры и исполнители — заменяемые временные органы. Project Corpus остаётся независимо используемым слоем идентичности, непрерывности и полномочий проекта. Organism layer через явный adapter выводит ограниченные свидетельства здоровья и восстановления, но не становится второй authority.
 
-Принятая архитектура: v0.1–v0.7. Экспериментальные Organ Systems остаются без версии — это не v0.8. Версия npm-пакета (`0.1.0-rc.1`) описывает жизненный цикл пакета, а не архитектурную версию. Project Corpus сохраняет Protocol 2.0 и optional Python Runtime 2.2.0.
+Принятая архитектура: v0.1–v0.7. Экспериментальные Organ Systems остаются без версии — это не v0.8. Версия npm-пакета (`0.1.0-rc.2`) описывает жизненный цикл пакета, а не архитектурную версию. Project Corpus сохраняет Protocol 2.0 и optional Python Runtime 2.2.0.
 
 ## Чего LSO автоматически не делает
 

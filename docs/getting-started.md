@@ -1,6 +1,6 @@
 # Getting started
 
-Living Software Organism (LSO) adds bounded health and recovery evidence around a project-owned continuity substrate. This is a local npm release candidate (`0.1.0-rc.1`), not a published npm package. Requires Node.js 26+ and npm.
+Living Software Organism (LSO) adds bounded health and recovery evidence around a project-owned continuity substrate. The corrective npm release candidate is `0.1.0-rc.2`. Install it with `npm install living-software-organism@0.1.0-rc.2`, then use `npx lso`. Requires Node.js 26+ and npm.
 
 ## Five-minute adoption from this source checkout
 
@@ -14,7 +14,7 @@ Change into the existing project you want to adopt, then install the generated t
 
 ```sh
 cd /absolute/path/to/your-project
-npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.1.tgz
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.2.tgz
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -60,6 +60,6 @@ If you only need durable identity, authority, Tasks, Reports and handoff, use `c
 
 ## Version boundaries and limitations
 
-Package version is not architecture version: the package is `0.1.0-rc.1`; accepted LSO architecture remains v0.1–v0.7; experimental organs remain unversioned. Project Corpus stays Protocol 2.0 and optional Runtime 2.2.0. No npm publication occurs as part of this repository task.
+Package version is not architecture version: the package is `0.1.0-rc.2`; accepted LSO architecture remains v0.1–v0.7; experimental organs remain unversioned. Project Corpus stays Protocol 2.0 and optional Runtime 2.2.0. The package remains a prerelease; `next` selects the current RC. Until a separately authorized stable release exists, `latest` may also select the verified RC.
 
 LSO does not prove every unlisted build input, secret, runtime service, external data set, or deployment environment. It does not run project build/test commands. Reacquisition is explicit; `doctor` never fetches. See [the product guide](productization.md), [architecture](architecture.md), [API](../components/organism/docs/api.md), and [safety](../components/organism/docs/safety.md).
