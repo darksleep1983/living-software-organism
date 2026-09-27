@@ -4,7 +4,9 @@ const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
 const {spawnSync} = require('node:child_process');
+let gitSpawnSync = spawnSync;
 const lso = require('./src');
+const safePaths = require('./src/paths');
 const VERSION = require('./package.json').version;
 const SCHEMA = 1;
 const CONFIG = 'lso.config.json';
@@ -21,14 +23,32 @@ function json(value) { return JSON.stringify(value, null, 2) + '\n'; }
 function safeId(s) { return typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(s); }
 function within(root, target) { const rel = path.relative(root, target); return rel === '' || (!rel.startsWith('..' + path.sep) && rel !== '..' && !path.isAbsolute(rel)); }
 function assertNoLinks(root, target) {
-  if (!within(root, target)) fail('UNSAFE_PATH', 'Resolved path escapes project root.');
-  let cur = root;
-  const rel = path.relative(root, target);
+  const base = path.resolve(root);
+  const resolved = path.resolve(target);
+  if (!within(base, resolved)) fail('UNSAFE_PATH', 'Resolved path escapes project root.');
+  const rel = path.relative(base, resolved);
+  if (!rel) return base;
+  let current = base;
   for (const part of rel.split(path.sep).filter(Boolean)) {
-    cur = path.join(cur, part);
-    try { if (fs.lstatSync(cur).isSymbolicLink()) fail('LINK_REJECTED', 'Symlink/reparse path is not accepted.'); }
-    catch (e) { if (e.code !== 'ENOENT') throw e; }
+    const parent = current;
+    current = path.join(parent, part);
+    let entry;
+    try { entry = fs.readdirSync(parent, {withFileTypes:true}).find(e => e.name === part); }
+    catch { fail('PATH_CLASSIFICATION_FAILED', 'Unable to classify path safely.'); }
+    if (!entry) return resolved;
+    if (entry.isSymbolicLink()) fail('LINK_REJECTED', 'Symlink/reparse path is not accepted.');
+    if (!entry.isDirectory() && !entry.isFile()) fail('PATH_CLASSIFICATION_FAILED', 'Unknown filesystem object type.');
+    let stat;
+    try { stat = fs.lstatSync(current); }
+    catch { fail('PATH_CLASSIFICATION_FAILED', 'Unable to inspect path safely.'); }
+    if (stat.isSymbolicLink()) fail('LINK_REJECTED', 'Symlink/reparse path is not accepted.');
+    if (entry.isDirectory() !== stat.isDirectory() || entry.isFile() !== stat.isFile()) fail('PATH_CLASSIFICATION_FAILED', 'Filesystem classification mismatch.');
+    let real;
+    try { real = fs.realpathSync(current); }
+    catch { fail('PATH_CLASSIFICATION_FAILED', 'Unable to resolve path safely.'); }
+    if (!within(base, real)) fail('PATH_ESCAPE', 'Resolved path escapes project root.');
   }
+  return resolved;
 }
 function resolveRoot(arg) {
   const root = path.resolve(arg || process.cwd());
@@ -70,11 +90,12 @@ function validRemote(value) {
   return /^file:\/\/\/(?:[A-Za-z]:\/)?[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^https:\/\/[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^ssh:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]+(?::[0-9]+)?\/[A-Za-z0-9._/-]+(?:\.git)?$/.test(value) || /^git@[A-Za-z0-9.-]+:[A-Za-z0-9._/-]+(?:\.git)?$/.test(value);
 }
 function safeRepoPath(ref) {
-  if (typeof ref !== 'string' || !ref || ref.startsWith('/') || ref.includes('\\') || ref.includes(':') || ref.split('/').some(x => !x || x === '.' || x === '..')) fail('UNSAFE_PATH', 'Unsafe repository-relative path.');
+  try { safePaths.relative(ref); }
+  catch { fail('UNSAFE_PATH', 'Unsafe repository-relative path.'); }
 }
 function context(root, c) { return lso.createContext({root, projectId: c.projectId, runtime: c.runtime, adapter: lso.projectCorpusAdapter()}); }
 function options(args) { return {json: args.includes('--json'), yes: args.includes('--yes'), dry: args.includes('--dry-run')}; }
-function init(root, opt) {
+function init(root, opt, confirmFn = confirm) {
   const meta = projectMetadata(root); const existingConfig = configPath(root); assertNoLinks(root, existingConfig);
   const corpus = ['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml'].some(f => fs.existsSync(path.join(root,f))) || fs.existsSync(path.join(root,'.project-corpus'));
   const allCorpus = ['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml'].every(f => fs.existsSync(path.join(root,f)));
@@ -97,9 +118,10 @@ function init(root, opt) {
     if (existing.projectId !== projectId) fail('CONFIG_BINDING_MISMATCH','Existing config is bound to another project.');
   }
   const plan={schemaVersion:1,projectId,root,detected:{git:meta.git,projectCorpusV2:allCorpus,packageJson:meta.packageJson,testCommand:meta.testCommand},create:planned.sort(),willNotModify:['source files','Git history','dependencies','external services'],dryRun:opt.dry};
-  if (opt.dry || (!opt.yes && (opt.json || !confirm(plan)))) return {...plan,result:'NOT_APPLIED'};
+  let approved = opt.yes;
+  if (!approved && !opt.dry && !opt.json) approved = confirmFn(plan);
+  if (opt.dry || (!opt.yes && opt.json) || !approved) return {...plan,result:'NOT_APPLIED'};
   if (opt.yes) process.stderr.write(renderInit(plan));
-  if (!opt.yes && !opt.json) return {...plan,result:'NOT_APPLIED'};
   const writes=[];
   try {
     if (!allCorpus) {
@@ -145,6 +167,7 @@ function status(root) {
   const a=assess(root); return {schemaVersion:1,projectId:a.config?.projectId||null,protocolAgreement:a.manifest?.identity.corpus_agreement===true && a.manifest?.identity.policy_agreement===true,lifecycle:a.manifest?.identity.lifecycle||'UNKNOWN',homeostasis:a.health.state,recovery:a.manifest?.readiness.canonical_substrate||'NOT_READY',latestHistory:null,mutation:false};
 }
 function contextView(root) {
+  if (!loadConfig(root,true)) fail('CONFIG_MISSING','lso.config.json is missing; run lso init.');
   const d=doctor(root); const c=d.project.id; const files=['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml'];
   const active=d.raw.manifest?.identity.activeTaskId; if(active && active!=='NONE' && safeId(active)) files.push(`.project-corpus/tasks/${active}.md`);
   const inventory=files.map(ref=>{const p=path.join(root,ref);return {path:ref,present:fs.existsSync(p),sha256:fs.existsSync(p)?sha(fs.readFileSync(p)):null};});
@@ -198,7 +221,7 @@ function cleanupOwned(root) {
 }
 function git(cwd,args) { const r=runGit(cwd,args); return r.stdout.toString('utf8').trim(); }
 function runGit(cwd,args,timeout=30000) {
-  const r=spawnSync('git',args,{cwd,encoding:null,shell:false,timeout,maxBuffer:8*1024*1024,windowsHide:true});
+  const r=gitSpawnSync('git',args,{cwd,encoding:null,shell:false,timeout,maxBuffer:8*1024*1024,windowsHide:true});
   if(r.error) fail(r.error.code==='ETIMEDOUT'?'GIT_TIMEOUT':r.error.code==='ENOENT'?'GIT_UNAVAILABLE':'GIT_ERROR','Git verifier failed ('+(r.error.code||'error')+').');
   if(r.status!==0) fail('GIT_REMOTE_FAILURE','Git origin could not be verified (exit '+r.status+').'); return r;
 }
@@ -235,4 +258,5 @@ function renderDoctor(d) {return `Living Software Organism\n\nProject: ${d.proje
 function renderStatus(s) {return `Project: ${s.projectId||'unconfigured'}\nProtocol agreement: ${s.protocolAgreement?'yes':'no'}\nLifecycle: ${s.lifecycle}\nHomeostasis: ${s.homeostasis}\nRecovery readiness: ${s.recovery}\nRecent history: ${s.latestHistory||'not recorded'}\nNo canonical files were changed.\n`;}
 function renderFindings(items) {return items.length?items.map(f=>`${f.severity} ${f.id}: ${f.summary}\n  Next: ${f.nextAction}\n  Repair: ${f.repair}`).join('\n')+'\n':'No findings.\n';}
 if(require.main===module) { try { process.exitCode=execute(process.argv.slice(2)); } catch(e) { const usage=['USAGE','ROOT_REQUIRED','UNSAFE_PATH'].includes(e.code); const degraded=['CONFIG_INVALID','CONFIG_MISSING','CORPUS_INCOMPATIBLE','CORPUS_ABSENT','IDENTITY_CONTINUITY','ACTIVE_TASK','SUBSTRATE_NOT_READY','ORIGIN_DECLARATION_REQUIRED','ORIGIN_FILES_REQUIRED','UNPROVEN_LOCAL_HEAD','UNPROVEN_DIRTY_TREE','GIT_REMOTE_FAILURE','GIT_TIMEOUT','GIT_UNAVAILABLE','LOCAL_FILE_MISSING','ORIGIN_COVERAGE_MISSING','ORIGIN_BYTES_DIFFER'].includes(e.code); const code=usage?EXIT.USAGE:degraded?EXIT.DEGRADED:EXIT.ERROR; const message={schemaVersion:1,kind:'lso_cli_error',error:{code:e.code||'INTERNAL_ERROR',message:e.message},authority:'NON_AUTHORITATIVE_DIAGNOSTIC'}; if(process.argv.includes('--json')) process.stdout.write(json(message)); else process.stderr.write(`${e.code||'ERROR'}: ${e.message}\\n`); process.exitCode=code; } }
-module.exports={execute,init,doctor,status,contextView,findings,originVerify,validateConfig,validRemote};
+function __setGitSpawnSyncForTests(fn) { gitSpawnSync = fn || spawnSync; }
+module.exports={execute,init,doctor,status,contextView,findings,originVerify,validateConfig,validRemote,__setGitSpawnSyncForTests};
