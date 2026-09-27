@@ -31,6 +31,12 @@ try {
   const adopter=path.join(base,'adopter');git(base,['clone','--quiet',bare,adopter]);
   const remote='file:///'+bare.replaceAll('\\','/');const verifyArgs=['origin','verify',adopter,'--remote',remote,'--commit',commit,'--file','src.txt','--json'];
   r=run(verifyArgs,adopter);assert.equal(r.status,0,r.stderr);const receipt=JSON.parse(r.stdout);assert.equal(receipt.result,'LOCAL_GIT_FIXTURE_VERIFIED');assert.equal(receipt.coveredFiles.length,1);assert.equal(receipt.restore_authorized,false);assert.equal(receipt.fullReconstruction,'UNPROVEN');assert(fs.existsSync(path.join(adopter,'.lso-runtime/reacquisition',commit+'.json')));
+  const tempBefore=fs.readdirSync(os.tmpdir()).filter(x=>x.startsWith('lso-origin-')).sort();
+  assert.notEqual(run(['origin','verify',adopter,'--remote','https://user:secret@example.invalid/repo.git','--commit',commit,'--file','src.txt','--json'],adopter).status,0);
+  assert.notEqual(run(['origin','verify',adopter,'--remote',remote,'--commit',commit,'--file','../outside.txt','--json'],adopter).status,0);
+  assert.notEqual(run(['origin','verify',adopter,'--remote','file:///missing-lfs-fixture.git','--commit',commit,'--file','src.txt','--json'],adopter).status,0);
+  const tempAfter=fs.readdirSync(os.tmpdir()).filter(x=>x.startsWith('lso-origin-')).sort();assert.deepEqual(tempAfter,tempBefore,'owned Git temp is removed after remote failure');
+  r=run(verifyArgs,adopter,{env:{...process.env,PATH:''}});assert.notEqual(r.status,0);assert.match(r.stdout,/GIT_UNAVAILABLE/);
   fs.writeFileSync(path.join(adopter,'src.txt'),'uncommitted mismatch');assert.notEqual(run(verifyArgs,adopter).status,0);
   assert(!require('../cli').validRemote('https://user:secret@example.invalid/repo.git'));
   assert.equal(run(['--version'],base).status,0);assert.equal(run(['--help'],base).status,0);
