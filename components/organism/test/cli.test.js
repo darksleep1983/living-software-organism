@@ -48,7 +48,15 @@ try {
   assert(fs.existsSync(path.join(project,'.project-corpus/state/PROJECT.md')));assert(fs.existsSync(path.join(project,'lso.config.json')));
   const original=fs.readFileSync(path.join(project,'.project-corpus/state/PROJECT.md'));
   r=run(['init',project,'--yes','--json'],project);assert.equal(r.status,0,r.stderr);assert.equal(JSON.parse(r.stdout).create.length,0);assert.deepEqual(fs.readFileSync(path.join(project,'.project-corpus/state/PROJECT.md')),original);
-  assert.equal(run(['doctor',project],project).status,0);assert.equal(run(['status',project,'--json'],project).status,0);
+  const healthyDoctor=run(['doctor',project],project);
+  assert.equal(healthyDoctor.status,0);
+  assert.match(healthyDoctor.stdout,/Required project sources are present/);
+  assert.match(healthyDoctor.stdout,/Project identity and declared continuity protocol agree/);
+  assert.match(healthyDoctor.stdout,/No active task is declared/);
+  assert.doesNotMatch(healthyDoctor.stdout,/are missing|do not agree|Task declared in STATUS.md is missing/);
+  const healthyDoctorJson=JSON.parse(run(['doctor',project,'--json'],project).stdout);
+  assert(healthyDoctorJson.findings.every(f=>f.severity==='PASS' && f.nextAction==='None.'));
+  assert.equal(run(['status',project,'--json'],project).status,0);
   for(const command of ['context','findings','recover']) { const args=command==='recover'?['recover','plan',project,'--json']:[command,project,'--json'];const x=run(args,project);assert.equal(x.status,0,x.stderr);assert.doesNotThrow(()=>JSON.parse(x.stdout)); }
   r=run(['recover','rehearse',project,'--json'],project);assert.equal(r.status,0,r.stderr);assert.equal(JSON.parse(r.stdout).result,'PASS');assert.equal(JSON.parse(r.stdout).restore_authorized,false);
   let config=JSON.parse(fs.readFileSync(path.join(project,'lso.config.json')));config.unknownSecuritySwitch=true;fs.writeFileSync(path.join(project,'lso.config.json'),JSON.stringify(config));assert.notEqual(run(['doctor',project,'--json'],project).status,0);

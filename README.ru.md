@@ -11,8 +11,9 @@
 Из корня этого репозитория соберите пакет и установите его в проект, который подключаете (в Windows укажите абсолютный путь к архиву):
 
 ```sh
-npm pack ./components/organism --pack-destination ./dist
-npm install --no-save ./dist/living-software-organism-0.1.0-rc.1.tgz
+npm pack ./components/organism --pack-destination .
+cd /путь/к/вашему-проекту
+npm install --no-save /абсолютный/путь/к/living-software-organism-0.1.0-rc.1.tgz
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor

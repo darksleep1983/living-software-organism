@@ -7,7 +7,7 @@ Living Software Organism (LSO) adds bounded health and recovery evidence around 
 Build the package from the LSO repository:
 
 ```sh
-npm pack ./components/organism --pack-destination ./dist
+npm pack ./components/organism --pack-destination .
 ```
 
 Change into the existing project you want to adopt, then install the generated tarball by its absolute path (do not run these install/init commands from the LSO monorepo unless you intend to adopt that repository):

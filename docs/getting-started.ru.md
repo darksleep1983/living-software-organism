@@ -7,7 +7,7 @@ Living Software Organism (LSO) добавляет ограниченные св�
 В корне репозитория LSO соберите tarball:
 
 ```sh
-npm pack ./components/organism --pack-destination ./dist
+npm pack ./components/organism --pack-destination .
 ```
 
 Перейдите в существующий проект и установите архив по абсолютному пути (не выполняйте init из монорепозитория LSO, если не хотите подключить сам монорепозиторий):

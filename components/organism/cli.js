@@ -158,7 +158,7 @@ function assess(root) {
 }
 function doctor(root) {
   const a=assess(root); const health=a.health; const manifest=a.manifest;
-  const findings=health.findings.map(f=>({id:f.id,code:f.id,severity:f.severity,state:f.severity==='PASS'?'CURRENT':'OBSERVED',summary:MESSAGE[f.id]||f.summary,evidence:f.detail||null,nextAction:f.severity==='PASS'?'None.':`Review ${f.id} in project-owned authority; no change is made.`,repair:'PROPOSAL_ONLY'}));
+  const findings=health.findings.map(f=>({id:f.id,code:f.id,severity:f.severity,state:f.severity==='PASS'?'CURRENT':'OBSERVED',summary:f.severity==='PASS'?f.summary:MESSAGE[f.id]||f.summary,evidence:f.detail||null,nextAction:f.severity==='PASS'?'None.':`Review ${f.id} in project-owned authority; no change is made.`,repair:'PROPOSAL_ONLY'}));
   const status=health.state==='STABLE'?'HEALTHY':health.state;
   const readiness=manifest?manifest.readiness.canonical_substrate:'NOT_READY';
   return {schemaVersion:1,productVersion:VERSION,architecture:'v0.1-v0.7',project:{id:a.config?.projectId||null,root},identity:health.state==='STABLE'?'HEALTHY':health.findings.find(x=>x.id==='IDENTITY_CONTINUITY')?.severity==='PASS'?'HEALTHY':'DEGRADED',continuity:health.findings.find(x=>x.id==='CONTINUITY')?.severity==='PASS'?'HEALTHY':'DEGRADED',homeostasis:health.state,recovery:readiness,readiness, reacquisition:'UNPROVEN',phenotype:'UNVERIFIED',findings,summary:{health:status,readiness},authority:health.authority,changed:false,raw:{health,manifest}};

@@ -11,7 +11,7 @@ Requires Node.js 26+ and npm. The product package is a local candidate; it has n
 Build it from this repository, then install the tarball into the project you want to adopt (use absolute path on Windows):
 
 ```sh
-npm pack ./components/organism --pack-destination ./dist
+npm pack ./components/organism --pack-destination .
 cd /path/to/your-project
 npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.1.tgz
 npx lso init --dry-run

@@ -1,6 +1,6 @@
 # Programmatic API
 
-Use Node.js 26 or newer. There are no install-time or runtime third-party dependencies. All public namespaces are exported by `src/index.js` (the package main); there is no CLI, dispatcher, server or automatic worker.
+Use Node.js 26 or newer. There are no install-time or runtime third-party dependencies. All public namespaces are exported by `src/index.js` (the package main). The package also provides the explicit `lso` CLI; the core library has no dispatcher, server or automatic worker.
 
 ```js
 const path = require('node:path');
@@ -54,7 +54,7 @@ History consumes compact metabolism and immune views and freshly reads Homeostas
 
 `experimental` exports `validateContract`, `phenotype`, `capsule`, `verifyCapsule`, `readiness`, `supervision`, `hygiene`, `trace`, `verifyTrace` and `persist`. Operations take `(ctx, declaration, ...)`; `supervision` takes `(declaration, dependencyResults)`. The [declaration schema](../schemas/experimental.schema.json) documents shape; runtime validation additionally verifies binding, freshness, path classification and topology. It does not rely on a JSON Schema package.
 
-Declarations bind `scope` equal to `project_id`, exact `physical_root`, `runtime`, substrate fingerprint, explicit source inventory, dependency/data classes, hashed recipe references, phenotype, organs, living roots and declared objects. `source.reacquisition` is strictly `UNPROVEN`. There is no positive durable-origin verifier, so `RECONSTRUCTIBLE` cannot currently be emitted.
+Declarations bind `scope` equal to `project_id`, exact `physical_root`, `runtime`, substrate fingerprint, explicit source inventory, dependency/data classes, hashed recipe references, phenotype, organs, living roots and declared objects. `source.reacquisition` is strictly `UNPROVEN`. The explicit `lso origin verify` CLI can produce bounded source reacquisition evidence, but this experimental contract does not consume its receipts, so `RECONSTRUCTIBLE` cannot currently be emitted.
 
 Probes are only `file`, `sha256`, `json` top-level key checks, or `unavailable`. They never execute a recipe. Execution/import/service availability that these probes cannot establish must remain unverified.
 
