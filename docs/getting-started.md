@@ -1,69 +1,65 @@
 # Getting started
 
-Living Software Organism is a public pre-release source repository. No unified npm/PyPI umbrella package is published yet.
+Living Software Organism (LSO) adds bounded health and recovery evidence around a project-owned continuity substrate. This is a local npm release candidate (`0.1.0-rc.1`), not a published npm package. Requires Node.js 26+ and npm.
 
-## Start with your problem
+## Five-minute adoption from this source checkout
 
-Use the complete stack if any of these sound familiar:
+Build the package from the LSO repository:
 
-- you switch between Codex, Claude, Gemini, OpenHands or other executors;
-- a project lives longer than one chat/session;
-- multiple agents can make claims about the same project;
-- old summaries become stale;
-- you need direct evidence for health or recovery claims;
-- you want project identity and authority to survive model/provider changes.
+```sh
+npm pack ./components/organism --pack-destination ./dist
+```
 
-The recommended path is **Project Corpus + LSO**.
+Change into the existing project you want to adopt, then install the generated tarball by its absolute path (do not run these install/init commands from the LSO monorepo unless you intend to adopt that repository):
 
-## Recommended: Project Corpus + LSO
+```sh
+cd /absolute/path/to/your-project
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.1.tgz
+npx lso init --dry-run
+npx lso init --yes
+npx lso doctor
+npx lso status
+npx lso context --json
+npx lso recover plan
+npx lso recover rehearse
+```
 
-From the repository root:
+Review the exact `init` plan first. Interactive `init` asks before writing; `--yes` approves only the deterministic paths printed in the plan. `--dry-run` and `--json` never apply writes. Init refuses partial/incompatible Corpus state and never overwrites canonical files. It does not install project dependencies, commit, push, or modify source files.
 
-    node examples/full-stack/smoke.js
+The commands work without a Python installation. Project Corpus's optional Python Runtime is not a dependency of this CLI.
 
-For repository verification:
+## Commands and evidence
 
-    node tools/check.js
-    node tools/verify.js
+- `lso doctor [path] [--json]` reads the adapter/core evidence, maps findings to recommendations and returns 0 for stable, 1 for degraded, 2 for usage errors, 3 for internal errors. It writes nothing.
+- `lso status [path] [--json]` is the compact read-only snapshot.
+- `lso context [path] --json` emits a bounded handoff envelope. It does not replace the project's mandatory reads.
+- `lso findings [path] [--json]` shows proposal-only findings.
+- `lso recover plan [path] [--json]` describes verified local canonical inputs, missing items and unproven prerequisites; it executes nothing.
+- `lso recover deps [path] [--json]` displays declared dependencies. Edit only descriptive non-secret declarations in `lso.config.json`; there is no arbitrary command field.
+- `lso recover rehearse [path] [--json]` uses the existing isolated runtime rehearsal and preserves `restore_authorized: false`.
+- `lso origin verify [path] --remote <https-or-ssh-git-url> --commit <40-hex> --file <tracked-path>` (or the `recovery.origin` config declaration) explicitly performs a bounded Git fetch into an owned temporary directory. It requires a clean local worktree/index and exact local HEAD. It compares the declared tracked paths byte-for-byte with blobs at that commit and binds the complete tracked tree inventory digest. Output is a receipt, not authority. Network failures/timeouts, missing coverage and changed/uncommitted files remain unverified. Local `file://` origins are accepted only to exercise the verifier with disposable bare-Git fixtures; they report `LOCAL_GIT_FIXTURE_VERIFIED`, never durable reacquisition.
 
-The integration smoke exercises the real Project Corpus Protocol V2 file layout through the real LSO Project Corpus adapter.
+A successful remote check proves only that the declared source files were reacquired from that URL/commit at the verification time. The current experimental Capsule contract does not consume CLI receipts to claim whole-application `RECONSTRUCTIBLE`; keep broader recovery `PARTIAL / REACQUISITION_VERIFIED_FOR_SOURCE` or `UNPROVEN`. No restore or repair is authorized.
 
-A healthy smoke demonstrates the integration boundary. It does not authorize repair, restore, deletion or publication.
+## Development checks and demo
 
-## Project Corpus only
+At the repository root:
 
-Use components/project-corpus.
+```sh
+npm test
+npm run check
+npm run demo
+npm run pack:organism
+```
 
-Its original Protocol, Runtime, templates, tests and documentation remain together. Protocol-only use requires no Python installation. The optional Runtime keeps the existing Python package identity project-corpus.
+The demo creates an ordinary temporary consumer, initializes it, demonstrates a real missing-continuity degradation and manual recovery, generates a plan and rehearses in isolation, then removes its owned temp project. Pack smoke runs `npm pack`, installs the tarball offline into a clean temporary consumer and exercises the installed CLI outside the repository.
 
-The former standalone GitHub repository is archived for historical/reference use, but the embedded component remains independently usable.
+## Project Corpus only / migration
 
-## Organism layer only
+If you only need durable identity, authority, Tasks, Reports and handoff, use `components/project-corpus` directly; LSO is optional. For an existing Project Corpus V2 project, `lso init` adds only the LSO config if its canonical identity and protocol/policy fields agree. For an existing project without Corpus V2, it proposes the embedded current minimal V2 template and requires explicit confirmation. Partial/incompatible Corpus state is refused; resolve it under the project's owner authority rather than asking LSO to rewrite it.
 
-Use components/organism.
+## Version boundaries and limitations
 
-The component is a dependency-free CommonJS Node library. Its component commands remain:
+Package version is not architecture version: the package is `0.1.0-rc.1`; accepted LSO architecture remains v0.1–v0.7; experimental organs remain unversioned. Project Corpus stays Protocol 2.0 and optional Runtime 2.2.0. No npm publication occurs as part of this repository task.
 
-    npm test
-    npm run smoke
-    npm run check
-
-It can use projectCorpusAdapter() or another explicit adapter implementing the documented normalized evidence contract.
-
-## Supported development baselines
-
-- Project Corpus Runtime: Python 3.11+
-- Organism reference implementation: Node.js 26+
-
-## Current publication evidence
-
-The public repository has already passed its publication gate with:
-
-- GitHub CI across supported Project Corpus OS/Python combinations;
-- Node 26 organism checks on Windows and Ubuntu;
-- full-stack integration and docs checks;
-- a true fresh clone from GitHub with committed-byte/history verification.
-
-That evidence applies to the repository publication. It does not turn experimental Organ Systems into v0.8 or guarantee complete recovery of external services and undeclared dependencies.
-
-See each component README for detailed guarantees and limits.
+LSO does not prove every unlisted build input, secret, runtime service, external data set, or deployment environment. It does not run project build/test commands. Reacquisition is explicit; `doctor` never fetches. See [the product guide](productization.md), [architecture](architecture.md), [API](../components/organism/docs/api.md), and [safety](../components/organism/docs/safety.md).

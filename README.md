@@ -2,143 +2,54 @@
 
 [Русская версия](README.ru.md)
 
-**Project-owned continuity, health and recovery for AI-assisted software.**
+**Keep a software project’s identity, current state and recovery evidence with the project—not in one AI chat.** LSO is for developers handing work between Codex, Claude, Gemini, OpenHands or other replaceable agents.
 
-Living Software Organism (LSO) is a public pre-release architecture and reference implementation for software projects that need to outlive any one AI session, model, provider, or executor.
+## Try the local release candidate in five minutes
 
-If you alternate between Codex, Claude, Gemini, OpenHands, local agents, or cloud executors, the project should not depend on whichever agent currently remembers the most context. LSO keeps durable project truth in project-owned state and derives health and recovery evidence from inspectable files and contracts.
+Requires Node.js 26+ and npm. The product package is a local candidate; it has not been published to npm.
 
-The central idea is simple:
+Build it from this repository, then install the tarball into the project you want to adopt (use absolute path on Windows):
 
-> **The software project is the durable organism. AI models, providers and executors are replaceable temporary organs.**
+```sh
+npm pack ./components/organism --pack-destination ./dist
+cd /path/to/your-project
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.1.tgz
+npx lso init --dry-run
+npx lso init --yes
+npx lso doctor
+npx lso status
+npx lso context --json
+npx lso recover plan
+npx lso recover rehearse
+```
 
-## What problem does it solve?
+`init --dry-run` shows the exact plan; `--yes` approves only those deterministic paths. No source/dependencies are changed, no commands executed, no Git commits made. Review and commit yourself. Project Corpus can still be used alone.
 
-AI agents are good at local work, but a chat transcript is a weak place to store project identity and authority.
+From the repository root, run `npm test`, `npm run check`, `npm run demo`, and `npm run pack:organism`.
 
-Long-lived AI-assisted projects need a way to answer:
+## What LSO is
 
-- What is the project, and what is authoritative right now?
-- Which agent claims are backed by direct evidence?
-- Is current state healthy, degraded, stale, or inconsistent?
-- What repair is proposed, and who is allowed to authorize it?
-- Can the project be reconstructed from known source and continuity evidence?
-- Can one agent hand work to another without turning an old summary into truth?
+The software project is the durable organism. Models, providers and executors are replaceable temporary organs. Project Corpus preserves project-owned identity, continuity and authority; the organism layer derives bounded health and recovery evidence without becoming authority.
 
-LSO treats those as project-owned questions instead of model-owned memory.
+Package version `0.1.0-rc.1` is lifecycle metadata, not architecture version. Accepted architecture remains v0.1–v0.7; experimental Organ Systems remain unversioned—not v0.8. Project Corpus remains Protocol 2.0 with optional Python Runtime 2.2.0.
 
-This repository is the complete stack:
+## What LSO will not modify automatically
 
-    Living Software Organism
-    ├── Project Corpus
-    │   identity · continuity · authority · Tasks · Reports · context
-    │
-    └── Organism layer
-        health · supervised repair · immune memory · metabolism
-        history · recovery · readiness · tracing · hygiene
-        supervision · phenotype
+No autonomous repair, arbitrary shell execution, background service/polling, implicit network, deletion, live restore/overwrite, provider switching, billing, or publication. Doctor/recovery receipts are evidence only. Only explicit `lso origin verify` contacts a declared Git origin. Source reacquisition does not prove full application reconstruction and never grants restore authority.
 
-## Why two layers?
+## Architecture and components
 
-A project first needs to know what it is, what is authoritative, what is current, and what happened. That is Project Corpus.
-
-Only then does it make sense to ask whether the project is healthy, what drifted, whether it can recover, what evidence is fresh, and what should survive. That is the organism layer.
-
-They are integrated without collapsing their authority boundaries:
-
-- **Project Corpus can be used by itself.**
-- **The organism layer can use another explicit adapter.**
-- **Project Corpus + LSO is the recommended complete stack.**
-
-## Components
-
-### Project Corpus
-
-[components/project-corpus/](components/project-corpus/)
-
-A vendor-neutral, Markdown-first protocol for durable project identity, continuity and authority, with an optional Python Runtime.
-
-Current imported identity is preserved:
-
-- Project Corpus Protocol 2.0
-- optional Python Runtime 2.2.0
-- Python package/import identity remains project-corpus / project_corpus
-- Project Corpus remains independently usable
-- its existing MIT license remains scoped to that component
-
-The former standalone [project-corpus repository](https://github.com/darksleep1983/project-corpus) is now archived as a historical/reference source and redirects active development here.
-
-### Living Software Organism
-
-[components/organism/](components/organism/)
-
-A dependency-free CommonJS Node.js reference implementation of bounded organism contracts.
-
-Accepted architecture lineage:
-
-- v0.1 Homeostasis
-- v0.2 Supervised Repair Contracts
-- v0.3 Supervised Capability Repair
-- v0.4 Verified Evolution / Immune Memory
-- v0.5 Metabolism / Resource Homeostasis
-- v0.6 Longitudinal Homeostasis / Health History
-- v0.7 Resilience / Recovery Readiness
-
-The newer Organ Systems remain **experimental and unversioned**: Recovery Dependency Contract, Rebirth Capsule, Organ Readiness, Nervous System Tracing, Clean Organism / Autophagy, Supervision Tree, and Reproducible Phenotype.
-
-This monorepo does not promote them to v0.8.
-
-## Five-minute local tour
-
-The GitHub source repository is public. No unified npm/PyPI umbrella package is published yet.
-
-From the repository root:
-
-    node examples/full-stack/smoke.js
-    node tools/check.js
-    node tools/verify.js
-
-The full-stack smoke creates a temporary Project Corpus V2 project, loads it through the real LSO Project Corpus adapter, derives health and recovery evidence, confirms that restore authority remains false, and removes its temporary state.
-
-See [Getting Started](docs/getting-started.md) for component-specific commands.
-
-## What this system does not do
-
-LSO does not grant itself authority over a project. It does not autonomously repair, dispatch work, execute generic shell commands, delete project files, restore live state, switch AI providers, buy services, or publish externally.
-
-Derived health and recovery status are evidence, not authority. A hash proves covered bytes, not durable reacquisition. A successful fresh Git clone proves repository reacquisition at that point in time, not indefinite remote availability or complete recovery of every external dependency.
-
-## Maturity
-
-This is a **public pre-release unified monorepo**.
-
-Project Corpus is the mature substrate component with its existing Protocol/Runtime releases. The organism layer remains a reference implementation with accepted architectural contracts through v0.7 and experimental unversioned extensions.
-
-Repository publication has been independently verified with:
-
-- GitHub CI across Windows, Ubuntu and macOS for Project Corpus;
-- Node 26 organism checks on Windows and Ubuntu;
-- full-stack integration and strict docs checks;
-- a true fresh clone from GitHub with committed-byte and history verification.
-
-This is repository-level publication evidence, not a claim of production adoption or fully automated fresh-machine recovery for arbitrary consuming projects.
-
-## Licensing
-
-The imported Project Corpus component retains its existing MIT license at [components/project-corpus/LICENSE](components/project-corpus/LICENSE).
-
-The umbrella repository and organism layer are licensed under the MIT License. The imported Project Corpus component remains MIT-licensed under its own preserved component license file.
-
-See [LICENSE](LICENSE) and [LICENSING.md](LICENSING.md).
+This repository combines Project Corpus, an independently usable Markdown-first substrate, with the Living Software Organism's bounded health, recovery, history, and experimental evidence contracts. The component identity and optional Python Runtime remain separate. See [the architecture](docs/architecture.md), [Project Corpus](components/project-corpus/), and [Organism](components/organism/).
 
 ## Documentation
 
-- [Getting Started](docs/getting-started.md)
-- [Unified Architecture](docs/architecture.md)
-- [Import provenance](docs/provenance.md)
-- [Project Corpus component](components/project-corpus/README.md)
-- [Organism component](components/organism/README.md)
-- [Organism safety boundaries](components/organism/docs/safety.md)
-- [Recovery and provenance](components/organism/docs/recovery.md)
+- [Getting started](docs/getting-started.md) · [Начало работы](docs/getting-started.ru.md)
+- [Product CLI and agent workflow](docs/productization.md) · [Руководство CLI](docs/productization.ru.md)
+- [Unified architecture](docs/architecture.md)
+- [Organism API](components/organism/docs/api.md) · [Safety](components/organism/docs/safety.md) · [Recovery](components/organism/docs/recovery.md)
 
-The living-ship idea in LEXX was a conceptual spark and metaphor only. Living Software Organism is an original software architecture; no affiliation, adaptation, runtime dependency, or copied fictional IP is implied.
+## Licensing
+
+The umbrella and organism package use MIT; Project Corpus preserves its existing component license. See [LICENSE](LICENSE) and [LICENSING.md](LICENSING.md).
+
+The LEXX living-ship idea was a conceptual spark only. LSO is an original architecture; no affiliation, adaptation or copied fictional IP is implied.
