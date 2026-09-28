@@ -14,7 +14,7 @@ function walk(dir) {
 walk(root);
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
 assert.equal(packageJson.name, 'living-software-organism');
-assert(packageJson.private !== true && packageJson.version === '0.1.0-rc.3' && packageJson.license === 'MIT');
+assert(packageJson.private !== true && packageJson.version === '0.1.0-rc.4' && packageJson.license === 'MIT');
 assert(packageJson.bin && packageJson.bin.lso === 'cli.js');
 assert(!packageJson.dependencies && !packageJson.devDependencies);
 assert(fs.existsSync(path.join(root, 'cli.js')) && fs.existsSync(path.join(root,'schemas','lso.config.schema.json')) && fs.existsSync(path.join(root,'templates','v2','minimal','.project-corpus','state','PROJECT.md')));

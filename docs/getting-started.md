@@ -2,14 +2,14 @@
 
 Living Software Organism (LSO) keeps project-owned continuity and gives you read-only health and recovery evidence that can survive a switch between AI agents.
 
-Current public release candidate: `0.1.0-rc.3`. Requires Node.js 26+ and npm.
+Current public release candidate: `0.1.0-rc.4`. Requires Node.js 26+ and npm.
 
 ## Five-minute npm adoption
 
 From the project you want to adopt:
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -98,7 +98,7 @@ Then install that tarball in the project you want to adopt:
 
 ```sh
 cd /absolute/path/to/your-project
-npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.3.tgz
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.4.tgz
 npx lso init --dry-run
 ```
 
@@ -115,7 +115,7 @@ npm run pack:organism
 
 ## Version and safety boundaries
 
-Package version is `0.1.0-rc.3`. Accepted LSO architecture remains v0.1-v0.7. Experimental Organ Systems remain unversioned. Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
+Package version is `0.1.0-rc.4`. Accepted LSO architecture remains v0.1-v0.7. Experimental Organ Systems remain unversioned. Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
 
 LSO does not autonomously repair, execute arbitrary shell commands, poll in the background, delete project files, perform live restore, switch providers, spend money or publish. `doctor` never fetches from the network.
 

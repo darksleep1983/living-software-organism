@@ -7,13 +7,13 @@ Living Software Organism (LSO) - prerelease Node.js package для project-owned
 Требуется Node.js 26+.
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
 ```
 
-Пакет публично доступен как `living-software-organism@0.1.0-rc.3`.
+Пакет публично доступен как `living-software-organism@0.1.0-rc.4`.
 
 Для повседневного использования достаточно четырёх идей:
 

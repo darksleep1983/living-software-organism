@@ -11,7 +11,7 @@ LSO - небольшой слой непрерывности и диагност
 Требуются Node.js 26+ и npm.
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -92,14 +92,14 @@ npx lso recover rehearse
 
 Репозиторий включает Project Corpus как независимо используемый Markdown-first слой непрерывности. Можно использовать только Project Corpus, LSO с другим явным adapter или полный объединённый стек.
 
-Версия пакета `0.1.0-rc.3` описывает жизненный цикл пакета. Принятая архитектура LSO остаётся v0.1-v0.7. Project Corpus остаётся Protocol 2.0 с optional Python Runtime 2.2.0.
+Версия пакета `0.1.0-rc.4` описывает жизненный цикл пакета. Принятая архитектура LSO остаётся v0.1-v0.7. Project Corpus остаётся Protocol 2.0 с optional Python Runtime 2.2.0.
 
 ## Работа из исходного репозитория
 
 ```sh
 npm pack ./components/organism --pack-destination .
 cd /путь/к/вашему-проекту
-npm install --no-save /абсолютный/путь/к/living-software-organism-0.1.0-rc.3.tgz
+npm install --no-save /абсолютный/путь/к/living-software-organism-0.1.0-rc.4.tgz
 npx lso init --dry-run
 ```
 

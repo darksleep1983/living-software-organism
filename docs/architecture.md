@@ -92,7 +92,7 @@ These names remain in stable APIs where already public. The CLI and first-contac
 
 ## Version boundaries
 
-- Public package: `living-software-organism@0.1.0-rc.3`
+- Public package: `living-software-organism@0.1.0-rc.4`
 - Accepted LSO architecture: v0.1-v0.7
 - Experimental Organ Systems: unversioned
 - Project Corpus: Protocol 2.0

@@ -39,7 +39,7 @@ assert(rootPackage.scripts.demo && rootPackage.scripts['pack:organism']);
 
 const organismPackage = JSON.parse(fs.readFileSync(path.join(organism, 'package.json'), 'utf8'));
 assert.equal(organismPackage.name, 'living-software-organism');
-assert.equal(organismPackage.version, '0.1.0-rc.3');
+assert.equal(organismPackage.version, '0.1.0-rc.4');
 assert.equal(organismPackage.private, undefined);
 assert.equal(organismPackage.bin.lso, 'cli.js');
 assert.equal(organismPackage.license, 'MIT');

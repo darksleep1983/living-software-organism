@@ -9,7 +9,7 @@ LSO по умолчанию работает только для чтения. �
 Один раз для проекта:
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 ```
@@ -85,6 +85,6 @@ Codex, Claude, Gemini, OpenHands и другие агенты использую
 
 LSO не чинит автоматически, не dispatch'ит работу, не запускает произвольный shell, не работает демоном, не удаляет файлы, не восстанавливает live state, не переключает провайдеров, не списывает деньги и не публикует. `origin verify` - единственный явный сетевой verifier CLI.
 
-Пакет `0.1.0-rc.3` остаётся prerelease. Архитектура остаётся v0.1-v0.7, experimental Organ Systems без версии, Project Corpus Protocol 2.0 с optional Runtime 2.2.0.
+Пакет `0.1.0-rc.4` остаётся prerelease. Архитектура остаётся v0.1-v0.7, experimental Organ Systems без версии, Project Corpus Protocol 2.0 с optional Runtime 2.2.0.
 
 См. [начало работы](getting-started.ru.md), [архитектуру](architecture.md), [безопасность](../components/organism/docs/safety.md) и [восстановление](../components/organism/docs/recovery.md).

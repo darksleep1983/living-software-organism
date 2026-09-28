@@ -9,7 +9,7 @@ You do not need the biological vocabulary to use the CLI.
 Once per project:
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 ```
@@ -85,6 +85,6 @@ These names are advanced architecture vocabulary. They are not required for the 
 
 LSO does not automatically repair, dispatch work, execute arbitrary shell commands, run a daemon, delete files, restore live state, switch providers, spend money or publish. `origin verify` is the only explicit network verifier in the CLI.
 
-Package `0.1.0-rc.3` is a prerelease. Architecture remains v0.1-v0.7; experimental Organ Systems remain unversioned; Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
+Package `0.1.0-rc.4` is a prerelease. Architecture remains v0.1-v0.7; experimental Organ Systems remain unversioned; Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
 
 See [Getting started](getting-started.md), [architecture](architecture.md), [safety](../components/organism/docs/safety.md), and [recovery](../components/organism/docs/recovery.md).

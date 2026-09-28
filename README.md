@@ -11,7 +11,7 @@ LSO is a small continuity and diagnostics layer for projects that move between C
 Requires Node.js 26+ and npm.
 
 ```sh
-npm install living-software-organism@0.1.0-rc.3
+npm install living-software-organism@0.1.0-rc.4
 npx lso init --dry-run
 npx lso init --yes
 npx lso doctor
@@ -92,14 +92,14 @@ Only explicit `lso origin verify` contacts a declared Git origin. Successful sou
 
 This repository includes Project Corpus as an independently usable Markdown-first continuity substrate. You can use Project Corpus alone, LSO with another explicit adapter, or the combined stack.
 
-Package version `0.1.0-rc.3` is lifecycle metadata. Accepted LSO architecture remains v0.1-v0.7. Project Corpus remains Protocol 2.0 with optional Python Runtime 2.2.0.
+Package version `0.1.0-rc.4` is lifecycle metadata. Accepted LSO architecture remains v0.1-v0.7. Project Corpus remains Protocol 2.0 with optional Python Runtime 2.2.0.
 
 ## From a source checkout
 
 ```sh
 npm pack ./components/organism --pack-destination .
 cd /path/to/your-project
-npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.3.tgz
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.4.tgz
 npx lso init --dry-run
 ```
 
