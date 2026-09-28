@@ -1,49 +1,110 @@
 # Getting started
 
-Living Software Organism (LSO) adds bounded health and recovery evidence around a project-owned continuity substrate. The corrective npm release candidate is `0.1.0-rc.2`. Install it with `npm install living-software-organism@0.1.0-rc.2`, then use `npx lso`. Requires Node.js 26+ and npm.
+Living Software Organism (LSO) keeps project-owned continuity and gives you read-only health and recovery evidence that can survive a switch between AI agents.
 
-## Five-minute adoption from this source checkout
+Current public release candidate: `0.1.0-rc.3`. Requires Node.js 26+ and npm.
 
-Build the package from the LSO repository:
+## Five-minute npm adoption
+
+From the project you want to adopt:
+
+```sh
+npm install living-software-organism@0.1.0-rc.3
+npx lso init --dry-run
+npx lso init --yes
+npx lso doctor
+```
+
+Start with `--dry-run`. It shows exactly what would be created. `--yes` approves only that deterministic plan.
+
+`init` does not install your application dependencies, run project scripts, modify source files, create a Git commit, push, publish, or overwrite an existing compatible canonical file.
+
+The CLI does not require Python. The optional Project Corpus Python Runtime is a separate component.
+
+## What gets added
+
+For a project that does not already have Project Corpus V2, `init` creates the minimal continuity substrate:
+
+```text
+AGENTS.md
+.project-corpus/state/PROJECT.md
+.project-corpus/state/STATUS.md
+.project-corpus/policy.toml
+.project-corpus/tasks/
+.project-corpus/reports/
+.project-corpus/history/
+lso.config.json
+```
+
+The three human-readable files you normally care about first are `AGENTS.md`, `PROJECT.md`, and `STATUS.md`.
+
+The policy and config files bind the tooling safely. Empty Tasks/Reports/history directories are continuity locations, not paperwork quotas.
+
+## Everyday workflow
+
+For small day-to-day work:
+
+1. Keep `AGENTS.md`, `PROJECT.md`, and `STATUS.md` accurate.
+2. Let the agent read those files before acting.
+3. Use a Task/Report only when the local project protocol requires it or when work is substantial, delegated, risky, resumable across sessions, or needs durable evidence.
+4. Run `npx lso doctor` or `npx lso status` when you want a fresh consistency check.
+
+LSO does not require a Task/Report for every trivial edit.
+
+## Main commands
+
+### Everyday
+
+- `lso doctor [path] [--json]` checks project identity, continuity, health and recovery readiness. It writes nothing.
+- `lso status [path] [--json]` gives a compact read-only snapshot.
+- `lso context [path] --json` gives an agent bounded pointers and evidence. It never replaces reading the actual project authority.
+- `lso findings [path] [--json]` shows current proposal-only findings.
+
+### Recovery evidence
+
+- `lso recover plan [path] [--json]` shows verified local inputs, missing items and unproven prerequisites. It executes nothing.
+- `lso recover deps [path] [--json]` shows declared recovery dependencies.
+- `lso recover rehearse [path] [--json]` performs an isolated rehearsal and always preserves `restore_authorized: false`.
+- `lso origin verify [path] --remote <https-or-ssh-git-url> --commit <40-hex> --file <tracked-path>` performs an explicit bounded Git fetch into owned temporary storage and verifies exact declared source bytes.
+
+A successful origin check proves source reacquisition only for the declared files at that URL/commit and time. It does not prove secrets, toolchains, services, data, deployment state or whole-application reconstruction.
+
+## Plain terms first
+
+You can use LSO without learning the biological vocabulary.
+
+- Project identity: what this project is and what rules apply.
+- Current state: what is true now and what work is active.
+- Health: whether those declarations agree with fresh evidence.
+- Recovery evidence: what can actually be verified about the declared project substrate.
+
+Advanced architecture terms such as Homeostasis, Immune Memory, Metabolism, Autophagy and Rebirth Capsule are documented in [architecture](architecture.md). Stable JSON/API names remain unchanged.
+
+## Existing Project Corpus projects
+
+If the project already has a compatible Project Corpus V2 layout, `lso init` adds only the missing LSO configuration. Partial or incompatible Corpus state fails closed rather than being overwritten.
+
+If all you need is durable identity/current-state handoff, Project Corpus can still be used by itself. LSO is optional.
+
+## From a source checkout
+
+From the LSO repository:
 
 ```sh
 npm pack ./components/organism --pack-destination .
 ```
 
-Change into the existing project you want to adopt, then install the generated tarball by its absolute path (do not run these install/init commands from the LSO monorepo unless you intend to adopt that repository):
+Then install that tarball in the project you want to adopt:
 
 ```sh
 cd /absolute/path/to/your-project
-npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.2.tgz
+npm install --no-save /absolute/path/to/living-software-organism-0.1.0-rc.3.tgz
 npx lso init --dry-run
-npx lso init --yes
-npx lso doctor
-npx lso status
-npx lso context --json
-npx lso recover plan
-npx lso recover rehearse
 ```
 
-Review the exact `init` plan first. Interactive `init` asks before writing; `--yes` approves only the deterministic paths printed in the plan. `--dry-run` and `--json` never apply writes. Init refuses partial/incompatible Corpus state and never overwrites canonical files. It does not install project dependencies, commit, push, or modify source files.
+## Repository verification
 
-The commands work without a Python installation. Project Corpus's optional Python Runtime is not a dependency of this CLI.
-
-## Commands and evidence
-
-- `lso doctor [path] [--json]` reads the adapter/core evidence, maps findings to recommendations and returns 0 for stable, 1 for degraded, 2 for usage errors, 3 for internal errors. It writes nothing.
-- `lso status [path] [--json]` is the compact read-only snapshot.
-- `lso context [path] --json` emits a bounded handoff envelope. It does not replace the project's mandatory reads.
-- `lso findings [path] [--json]` shows proposal-only findings.
-- `lso recover plan [path] [--json]` describes verified local canonical inputs, missing items and unproven prerequisites; it executes nothing.
-- `lso recover deps [path] [--json]` displays declared dependencies. Edit only descriptive non-secret declarations in `lso.config.json`; there is no arbitrary command field.
-- `lso recover rehearse [path] [--json]` uses the existing isolated runtime rehearsal and preserves `restore_authorized: false`.
-- `lso origin verify [path] --remote <https-or-ssh-git-url> --commit <40-hex> --file <tracked-path>` (or the `recovery.origin` config declaration) explicitly performs a bounded Git fetch into an owned temporary directory. It requires a clean local worktree/index and exact local HEAD. It compares the declared tracked paths byte-for-byte with blobs at that commit and binds the complete tracked tree inventory digest. Output is a receipt, not authority. Network failures/timeouts, missing coverage and changed/uncommitted files remain unverified. Local `file://` origins are accepted only to exercise the verifier with disposable bare-Git fixtures; they report `LOCAL_GIT_FIXTURE_VERIFIED`, never durable reacquisition.
-
-A successful remote check proves only that the declared source files were reacquired from that URL/commit at the verification time. The current experimental Capsule contract does not consume CLI receipts to claim whole-application `RECONSTRUCTIBLE`; keep broader recovery `PARTIAL / REACQUISITION_VERIFIED_FOR_SOURCE` or `UNPROVEN`. No restore or repair is authorized.
-
-## Development checks and demo
-
-At the repository root:
+From the repository root:
 
 ```sh
 npm test
@@ -52,14 +113,10 @@ npm run demo
 npm run pack:organism
 ```
 
-The demo creates an ordinary temporary consumer, initializes it, demonstrates a real missing-continuity degradation and manual recovery, generates a plan and rehearses in isolation, then removes its owned temp project. Pack smoke runs `npm pack`, installs the tarball offline into a clean temporary consumer and exercises the installed CLI outside the repository.
+## Version and safety boundaries
 
-## Project Corpus only / migration
+Package version is `0.1.0-rc.3`. Accepted LSO architecture remains v0.1-v0.7. Experimental Organ Systems remain unversioned. Project Corpus remains Protocol 2.0 with optional Runtime 2.2.0.
 
-If you only need durable identity, authority, Tasks, Reports and handoff, use `components/project-corpus` directly; LSO is optional. For an existing Project Corpus V2 project, `lso init` adds only the LSO config if its canonical identity and protocol/policy fields agree. For an existing project without Corpus V2, it proposes the embedded current minimal V2 template and requires explicit confirmation. Partial/incompatible Corpus state is refused; resolve it under the project's owner authority rather than asking LSO to rewrite it.
+LSO does not autonomously repair, execute arbitrary shell commands, poll in the background, delete project files, perform live restore, switch providers, spend money or publish. `doctor` never fetches from the network.
 
-## Version boundaries and limitations
-
-Package version is not architecture version: the package is `0.1.0-rc.2`; accepted LSO architecture remains v0.1–v0.7; experimental organs remain unversioned. Project Corpus stays Protocol 2.0 and optional Runtime 2.2.0. The package remains a prerelease; `next` selects the current RC. Until a separately authorized stable release exists, `latest` may also select the verified RC.
-
-LSO does not prove every unlisted build input, secret, runtime service, external data set, or deployment environment. It does not run project build/test commands. Reacquisition is explicit; `doctor` never fetches. See [the product guide](productization.md), [architecture](architecture.md), [API](../components/organism/docs/api.md), and [safety](../components/organism/docs/safety.md).
+See [CLI and agent workflow](productization.md), [architecture](architecture.md), [API](../components/organism/docs/api.md), and [safety](../components/organism/docs/safety.md).

@@ -53,6 +53,11 @@ try {
   assert.match(healthyDoctor.stdout,/Required project sources are present/);
   assert.match(healthyDoctor.stdout,/Project identity and declared continuity protocol agree/);
   assert.match(healthyDoctor.stdout,/No active task is declared/);
+  assert.match(healthyDoctor.stdout,/Project identity:\s+HEALTHY/);
+  assert.match(healthyDoctor.stdout,/Current continuity:\s+HEALTHY/);
+  assert.match(healthyDoctor.stdout,/Health:\s+STABLE/);
+  assert.match(healthyDoctor.stdout,/Recovery evidence:\s+READY/);
+  assert.doesNotMatch(healthyDoctor.stdout,/Homeostasis:|Phenotype:/);
   assert.doesNotMatch(healthyDoctor.stdout,/are missing|do not agree|Task declared in STATUS.md is missing/);
   const healthyDoctorJson=JSON.parse(run(['doctor',project,'--json'],project).stdout);
   assert(healthyDoctorJson.findings.every(f=>f.severity==='PASS' && f.nextAction==='None.'));
@@ -121,6 +126,7 @@ try {
 
   fs.writeFileSync(path.join(adopter,'src.txt'),'uncommitted mismatch');assert.notEqual(run(verifyArgs,adopter).status,0);
   assert(!cli.validRemote('https://user:secret@example.invalid/repo.git'));
-  assert.equal(run(['--version'],base).status,0);assert.equal(run(['--help'],base).status,0);
+  const help=run(['--help'],base);assert.equal(help.status,0);assert.match(help.stdout,/Quick start:/);assert.match(help.stdout,/you do not need it for everyday use/);
+  assert.equal(run(['--version'],base).status,0);
 } finally { teardown(base); }
 console.log('CLI tests PASS: init plan/apply/idempotence, read-only views, recovery rehearsal, fail-closed config, and local bare Git reacquisition.');

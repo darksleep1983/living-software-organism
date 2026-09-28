@@ -1,7 +1,7 @@
 {
   "name": "living-software-organism",
-  "version": "0.1.0-rc.2",
-  "description": "Project-owned continuity, health and recovery evidence for AI-assisted software projects",
+  "version": "0.1.0-rc.3",
+  "description": "Keep a software project's identity, current state, health and recovery evidence with the project",
   "license": "MIT",
   "main": "src/index.js",
   "type": "commonjs",
@@ -29,5 +29,21 @@
     "README.md",
     "README.ru.md",
     "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darksleep1983/living-software-organism.git",
+    "directory": "components/organism"
+  },
+  "homepage": "https://github.com/darksleep1983/living-software-organism#readme",
+  "bugs": {
+    "url": "https://github.com/darksleep1983/living-software-organism/issues"
+  },
+  "keywords": [
+    "project-continuity",
+    "project-health",
+    "recovery-evidence",
+    "ai-agents",
+    "cli"
   ]
 }

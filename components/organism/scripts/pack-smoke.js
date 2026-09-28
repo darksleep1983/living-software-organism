@@ -6,7 +6,7 @@ function clean(p) {if(!fs.existsSync(p))return;const walk=d=>{for(const e of fs.
 try {
   const npmCli=process.env.npm_execpath;
   if(!npmCli) throw new Error('NPM_EXEC_PATH_UNAVAILABLE');
-  const output=run(process.execPath,[npmCli,'pack','--json','--pack-destination',workspace],packageRoot);const packed=JSON.parse(output)[0];assert.equal(packed.name,'living-software-organism');assert.equal(packed.version,'0.1.0-rc.2');assert(packed.files.some(x=>x.path==='cli.js'));assert(packed.files.some(x=>x.path==='templates/v2/minimal/.project-corpus/state/PROJECT.md'));const tarball=path.join(workspace,packed.filename);assert(fs.existsSync(tarball));
+  const output=run(process.execPath,[npmCli,'pack','--json','--pack-destination',workspace],packageRoot);const packed=JSON.parse(output)[0];assert.equal(packed.name,'living-software-organism');assert.equal(packed.version,'0.1.0-rc.3');assert(packed.files.some(x=>x.path==='cli.js'));assert(packed.files.some(x=>x.path==='templates/v2/minimal/.project-corpus/state/PROJECT.md'));const tarball=path.join(workspace,packed.filename);assert(fs.existsSync(tarball));
   run(process.execPath,[npmCli,'install','--offline','--ignore-scripts','--no-audit','--no-fund',tarball],consumer);
   const entry=path.join(consumer,'node_modules','living-software-organism','cli.js');assert(fs.existsSync(entry));
   // Exercise npm's installed executable shim, including Windows Node dispatch.
