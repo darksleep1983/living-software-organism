@@ -5,6 +5,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const recovery = require('../src/recovery');
 const {fixture} = require('./helpers');
+function status(id, task) {
+  return `# Status\n\nProtocol-Version: 2.0\nProject-ID: ${id}\nLifecycle-Status: PAUSED\nActive-Task-ID: ${task}\nLast-Verified-At: UNVERIFIED\nEvidence-Class: UNVERIFIED\n\n## Current Verified Baseline\n\nUNVERIFIED\n\n## Blockers\n\nNONE\n\n## Evidence References\n\nNONE\n\n## Exact Next Action\n\nNONE\n`;
+}
 test('canonical substrate, isolated rehearsal, tampering, stale sources and no restore', () => {
   const f = fixture();
   try {
@@ -23,10 +26,10 @@ test('canonical substrate, isolated rehearsal, tampering, stale sources and no r
 test('identity/policy mismatch and missing exact active task fail closed', () => {
   const f = fixture();
   try {
-    f.write('.project-corpus/state/STATUS.md', 'Protocol-Version: 2.0\nProject-ID: other\nActive-Task-ID: missing\n');
+    f.write('.project-corpus/state/STATUS.md', status('other', 'missing'));
     assert.equal(recovery.buildManifest(f.ctx).readiness.canonical_substrate, 'NOT_READY');
     assert.throws(() => recovery.rehearse(f.ctx), /SUBSTRATE_NOT_READY/);
-    f.write('.project-corpus/state/STATUS.md', 'Protocol-Version: 2.0\nProject-ID: fixture\nActive-Task-ID: ../escape\n');
+    f.write('.project-corpus/state/STATUS.md', status('fixture', '../escape'));
     assert.throws(() => recovery.buildManifest(f.ctx), /UNSAFE_TASK_ID/);
   } finally { f.cleanup(); }
 });
@@ -35,7 +38,7 @@ test('missing continuity is PARTIAL and explicit active task is fingerprinted', 
   try {
     fs.rmdirSync(path.join(f.root, '.project-corpus/history'));
     assert.equal(recovery.buildManifest(f.ctx).readiness.canonical_substrate, 'PARTIAL');
-    f.write('.project-corpus/state/STATUS.md', 'Protocol-Version: 2.0\nProject-ID: fixture\nActive-Task-ID: work\n');
+    f.write('.project-corpus/state/STATUS.md', status('fixture', 'work'));
     f.write('.project-corpus/tasks/work.md', '# Frozen work\n');
     assert(recovery.buildManifest(f.ctx).sources.some(s => s.id === 'ACTIVE_TASK'));
     assert.equal(recovery.rehearse(f.ctx).result, 'PASS');

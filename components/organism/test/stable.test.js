@@ -20,10 +20,10 @@ function write(file, value) {
 }
 
 function projectDoc(id, protocol = '2.0') {
-  return `# Project\n\nProtocol-Version: ${protocol}\nProject-ID: ${id}\n\n## Objective\n\nfixture\n`;
+  return `# Project\n\nProtocol-Version: ${protocol}\nProject-ID: ${id}\nLogical-Name: Fixture\n\n## Objective\n\nfixture\n\n## Invariants\n\nNONE\n\n## Durable Scope Boundaries\n\nfixture\n\n## Non-Goals\n\nNONE\n`;
 }
 function statusDoc(id, task = 'NONE', protocol = '2.0') {
-  return `# Status\n\nProtocol-Version: ${protocol}\nProject-ID: ${id}\nLifecycle-Status: PAUSED\nActive-Task-ID: ${task}\n\n## Exact Next Action\n\nNONE\n`;
+  return `# Status\n\nProtocol-Version: ${protocol}\nProject-ID: ${id}\nLifecycle-Status: PAUSED\nActive-Task-ID: ${task}\nLast-Verified-At: UNVERIFIED\nEvidence-Class: UNVERIFIED\n\n## Current Verified Baseline\n\nUNVERIFIED\n\n## Blockers\n\nNONE\n\n## Evidence References\n\nNONE\n\n## Exact Next Action\n\nNONE\n`;
 }
 function corpus(root, id = 'fixture') {
   write(path.join(root, 'AGENTS.md'), `# ${id}\n`);

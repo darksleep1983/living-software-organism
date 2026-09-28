@@ -8,6 +8,7 @@ const {spawnSync} = require('node:child_process');
 let gitSpawnSync = spawnSync;
 const lso = require('./src');
 const safePaths = require('./src/paths');
+const {parseMetadata} = require('./src/corpus-metadata');
 const VERSION = require('./package.json').version;
 const SCHEMA = 1;
 const CONFIG = 'lso.config.json';
@@ -16,6 +17,7 @@ const EXIT = {OK: 0, DEGRADED: 1, USAGE: 2, ERROR: 3};
 const MESSAGE = {
   REQUIRED_SOURCES: 'Required project files are missing.', IDENTITY_CONTINUITY: 'Project identity or protocol fields do not agree.',
   ACTIVE_TASK: 'The active Task declared in STATUS.md is missing.', CONTINUITY: 'Optional continuity directories are missing.',
+  PROTOCOL_METADATA: 'Required Project Corpus V2 metadata or sections are invalid.',
   CORPUS_ABSENT: 'Project Corpus V2 has not been initialized.', CONFIG_INVALID: 'LSO configuration is invalid.'
 };
 function fail(code, message) { const e = new Error(message); e.code = code; throw e; }
@@ -101,12 +103,14 @@ function init(root, opt, confirmFn = confirm) {
   const corpus = ['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml'].some(f => fs.existsSync(path.join(root,f))) || fs.existsSync(path.join(root,'.project-corpus'));
   const allCorpus = ['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml'].every(f => fs.existsSync(path.join(root,f)));
   if (corpus && !allCorpus) fail('CORPUS_INCOMPATIBLE', 'Existing partial/incompatible Corpus state; refusing to overwrite.');
-  const projectId = allCorpus ? extract(fs.readFileSync(path.join(root,'.project-corpus/state/PROJECT.md'),'utf8'),'Project-ID') : slug(path.basename(root));
+  const projectMeta = allCorpus ? parseMetadata(fs.readFileSync(path.join(root,'.project-corpus/state/PROJECT.md'),'utf8'), 'PROJECT') : null;
+  const statusMeta = allCorpus ? parseMetadata(fs.readFileSync(path.join(root,'.project-corpus/state/STATUS.md'),'utf8'), 'STATUS') : null;
+  if (allCorpus && (!projectMeta.valid || !statusMeta.valid)) fail('CORPUS_INCOMPATIBLE','Existing Corpus V2 metadata or sections are invalid.');
+  const projectId = allCorpus ? projectMeta.values['Project-ID'] : slug(path.basename(root));
   if (!safeId(projectId)) fail('PROJECT_ID_INVALID', 'Existing project ID is invalid.');
   if (allCorpus) {
     const pc=fs.readFileSync(path.join(root,'.project-corpus/policy.toml'),'utf8');
-    const status=fs.readFileSync(path.join(root,'.project-corpus/state/STATUS.md'),'utf8');
-    if (extract(status,'Project-ID') !== projectId || extract(status,'Protocol-Version') !== '2.0' || !pc.includes(`project_id = "${projectId}"`) || !pc.includes('policy_version = "2.0"') || extract(fs.readFileSync(path.join(root,'.project-corpus/state/PROJECT.md'),'utf8'),'Protocol-Version') !== '2.0') fail('CORPUS_INCOMPATIBLE','Existing Corpus identity/policy does not agree with supported V2.');
+    if (statusMeta.values['Project-ID'] !== projectId || !pc.includes(`project_id = "${projectId}"`) || !pc.includes('policy_version = "2.0"')) fail('CORPUS_INCOMPATIBLE','Existing Corpus identity/policy does not agree with supported V2.');
   }
   const planned = [];
   if (!allCorpus) for (const rel of ['AGENTS.md','.project-corpus/state/PROJECT.md','.project-corpus/state/STATUS.md','.project-corpus/policy.toml']) planned.push(rel);
@@ -149,7 +153,6 @@ function confirm(plan) {
   const n = fs.readSync(0, bytes, 0, bytes.length, null);
   return /^y(?:es)?$/i.test(bytes.subarray(0, n).toString('utf8').trim());
 }
-function extract(text,key) { const m=text.match(new RegExp('^'+key+':\\s*(.+)$','m')); return m&&m[1].trim(); }
 function slug(s) { return (s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^[^A-Za-z0-9]+/,'').slice(0,128) || 'project'); }
 function humanize(s) { return s.replace(/[-_.]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
 function assess(root) {
@@ -162,7 +165,7 @@ function doctor(root) {
   const findings=health.findings.map(f=>({id:f.id,code:f.id,severity:f.severity,state:f.severity==='PASS'?'CURRENT':'OBSERVED',summary:f.severity==='PASS'?f.summary:MESSAGE[f.id]||f.summary,evidence:f.detail||null,nextAction:f.severity==='PASS'?'None.':`Review ${f.id} in project-owned authority; no change is made.`,repair:'PROPOSAL_ONLY'}));
   const status=health.state==='STABLE'?'HEALTHY':health.state;
   const readiness=manifest?manifest.readiness.canonical_substrate:'NOT_READY';
-  return {schemaVersion:1,productVersion:VERSION,architecture:'v0.1-v0.7',project:{id:a.config?.projectId||null,root},identity:health.state==='STABLE'?'HEALTHY':health.findings.find(x=>x.id==='IDENTITY_CONTINUITY')?.severity==='PASS'?'HEALTHY':'DEGRADED',continuity:health.findings.find(x=>x.id==='CONTINUITY')?.severity==='PASS'?'HEALTHY':'DEGRADED',homeostasis:health.state,recovery:readiness,readiness, reacquisition:'UNPROVEN',phenotype:'UNVERIFIED',findings,summary:{health:status,readiness},authority:health.authority,changed:false,raw:{health,manifest}};
+  return {schemaVersion:1,productVersion:VERSION,architecture:'v0.1-v0.7',project:{id:a.config?.projectId||null,root},identity:health.state==='STABLE'?'HEALTHY':health.findings.find(x=>x.id==='IDENTITY_CONTINUITY')?.severity==='PASS'&&health.findings.find(x=>x.id==='PROTOCOL_METADATA')?.severity==='PASS'?'HEALTHY':'DEGRADED',continuity:health.findings.find(x=>x.id==='CONTINUITY')?.severity==='PASS'?'HEALTHY':'DEGRADED',homeostasis:health.state,recovery:readiness,readiness, reacquisition:'UNPROVEN',phenotype:'UNVERIFIED',findings,summary:{health:status,readiness},authority:health.authority,changed:false,raw:{health,manifest}};
 }
 function status(root) {
   const a=assess(root); return {schemaVersion:1,projectId:a.config?.projectId||null,protocolAgreement:a.manifest?.identity.corpus_agreement===true && a.manifest?.identity.policy_agreement===true,lifecycle:a.manifest?.identity.lifecycle||'UNKNOWN',homeostasis:a.health.state,recovery:a.manifest?.readiness.canonical_substrate||'NOT_READY',latestHistory:null,mutation:false};
@@ -258,6 +261,6 @@ function execute(argv) {
 function renderDoctor(d) {return `Living Software Organism\n\nProject:              ${d.project.id||'unconfigured'}\nProject identity:     ${d.identity}\nCurrent continuity:   ${d.continuity}\nHealth:               ${d.homeostasis}\nRecovery evidence:    ${d.recovery}\nSource reacquisition: ${d.reacquisition}\nReproducibility:      ${d.phenotype}\n\nFindings: ${d.findings.length}\n${d.findings.map(f=>`  ${f.severity.padEnd(4)} ${f.id}: ${f.summary}`).join('\n')}\n\nNothing was changed.\n`;}
 function renderStatus(s) {return `Project: ${s.projectId||'unconfigured'}\nProject records agree: ${s.protocolAgreement?'yes':'no'}\nLifecycle: ${s.lifecycle}\nHealth: ${s.homeostasis}\nRecovery evidence: ${s.recovery}\nRecent history: ${s.latestHistory||'not recorded'}\nNo canonical files were changed.\n`;}
 function renderFindings(items) {return items.length?items.map(f=>`${f.severity} ${f.id}: ${f.summary}\n  Next: ${f.nextAction}\n  Repair: ${f.repair}`).join('\n')+'\n':'No findings.\n';}
-if(require.main===module) { try { process.exitCode=execute(process.argv.slice(2)); } catch(e) { const usage=['USAGE','ROOT_REQUIRED','UNSAFE_PATH'].includes(e.code); const degraded=['CONFIG_INVALID','CONFIG_MISSING','CORPUS_INCOMPATIBLE','CORPUS_ABSENT','IDENTITY_CONTINUITY','ACTIVE_TASK','SUBSTRATE_NOT_READY','ORIGIN_DECLARATION_REQUIRED','ORIGIN_FILES_REQUIRED','UNPROVEN_LOCAL_HEAD','UNPROVEN_DIRTY_TREE','GIT_REMOTE_FAILURE','GIT_TIMEOUT','GIT_UNAVAILABLE','LOCAL_FILE_MISSING','ORIGIN_COVERAGE_MISSING','ORIGIN_BYTES_DIFFER'].includes(e.code); const code=usage?EXIT.USAGE:degraded?EXIT.DEGRADED:EXIT.ERROR; const message={schemaVersion:1,kind:'lso_cli_error',error:{code:e.code||'INTERNAL_ERROR',message:e.message},authority:'NON_AUTHORITATIVE_DIAGNOSTIC'}; if(process.argv.includes('--json')) process.stdout.write(json(message)); else process.stderr.write(`${e.code||'ERROR'}: ${e.message}\\n`); process.exitCode=code; } }
+if(require.main===module) { try { process.exitCode=execute(process.argv.slice(2)); } catch(e) { const errorCode=e.code||(e.message==='UNSAFE_TASK_ID'?'UNSAFE_TASK_ID':null); const usage=['USAGE','ROOT_REQUIRED','UNSAFE_PATH'].includes(errorCode); const degraded=['CONFIG_INVALID','CONFIG_MISSING','CORPUS_INCOMPATIBLE','CORPUS_ABSENT','IDENTITY_CONTINUITY','ACTIVE_TASK','UNSAFE_TASK_ID','SUBSTRATE_NOT_READY','ORIGIN_DECLARATION_REQUIRED','ORIGIN_FILES_REQUIRED','UNPROVEN_LOCAL_HEAD','UNPROVEN_DIRTY_TREE','GIT_REMOTE_FAILURE','GIT_TIMEOUT','GIT_UNAVAILABLE','LOCAL_FILE_MISSING','ORIGIN_COVERAGE_MISSING','ORIGIN_BYTES_DIFFER'].includes(errorCode); const code=usage?EXIT.USAGE:degraded?EXIT.DEGRADED:EXIT.ERROR; const message={schemaVersion:1,kind:'lso_cli_error',error:{code:errorCode||'INTERNAL_ERROR',message:e.message},authority:'NON_AUTHORITATIVE_DIAGNOSTIC'}; if(process.argv.includes('--json')) process.stdout.write(json(message)); else process.stderr.write(`${errorCode||'ERROR'}: ${e.message}\\n`); process.exitCode=code; } }
 function __setGitSpawnSyncForTests(fn) { gitSpawnSync = fn || spawnSync; }
 module.exports={execute,init,doctor,status,contextView,findings,originVerify,validateConfig,validRemote,__setGitSpawnSyncForTests};

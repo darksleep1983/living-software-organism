@@ -32,6 +32,12 @@ function inspect(ctx) {
   const sources = Array.isArray(view.sources) ? view.sources : [];
   const continuity = Array.isArray(view.continuity) ? view.continuity : [];
   const identity = view.identity || {};
+  if (ctx.adapter.kind === 'project-corpus-v2-reference') {
+    const metadataIssues = Array.isArray(identity.metadataIssues) ? identity.metadataIssues : ['METADATA_EVIDENCE_MISSING'];
+    findings.push(finding('PROTOCOL_METADATA', metadataIssues.length ? 'FAIL' : 'PASS',
+      metadataIssues.length ? 'Required Project Corpus V2 metadata or sections are invalid.' : 'Project Corpus V2 metadata and sections conform.',
+      metadataIssues.length ? metadataIssues.slice(0, 16).join(', ') : undefined));
+  }
   const missing = sources.filter(x => x && x.required && x.present !== true);
   findings.push(finding('REQUIRED_SOURCES', missing.length ? 'FAIL' : 'PASS',
     missing.length ? 'Required project sources are unavailable.' : 'Required project sources are present.',
@@ -49,9 +55,10 @@ function inspect(ctx) {
     identityMismatch ? 'Project identity or continuity protocol is inconsistent.' : 'Project identity and declared continuity protocol agree.',
     identityMismatch ? 'Compare project id, status project id, protocol fields, and any supplied policy identity.' : undefined));
 
-  const activeTask = identity.activeTaskId || 'NONE';
-  const taskPresent = activeTask === 'NONE' || sources.some(x => x && x.present === true
-    && (x.id === `task:${activeTask}` || x.id === activeTask || x.path === `.project-corpus/tasks/${activeTask}.md`));
+  const activeTask = identity.activeTaskId == null && ctx.adapter.kind !== 'project-corpus-v2-reference'
+    ? 'NONE' : identity.activeTaskId;
+  const taskPresent = activeTask === 'NONE' || (typeof activeTask === 'string' && sources.some(x => x && x.present === true
+    && (x.id === `task:${activeTask}` || x.id === activeTask || x.path === `.project-corpus/tasks/${activeTask}.md`)));
   findings.push(finding('ACTIVE_TASK', taskPresent ? 'PASS' : 'FAIL',
     taskPresent ? (activeTask === 'NONE' ? 'No active task is declared.' : 'The declared active task is present.') : 'The declared active task cannot be found in fresh adapter evidence.',
     taskPresent ? undefined : activeTask));

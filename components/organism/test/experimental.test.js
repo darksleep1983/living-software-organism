@@ -32,8 +32,8 @@ const ctx=createContext({root,projectId:'fixture',adapter:projectCorpusAdapter()
 const options={};
 try {
   write('AGENTS.md','# Fixture\n');
-  write('.project-corpus/state/PROJECT.md','Project-ID: fixture\nProtocol-Version: 2.0\n');
-  write('.project-corpus/state/STATUS.md','Project-ID: fixture\nProtocol-Version: 2.0\nActive-Task-ID: NONE\n');
+  write('.project-corpus/state/PROJECT.md','# Project\n\nProtocol-Version: 2.0\nProject-ID: fixture\nLogical-Name: Fixture\n\n## Objective\n\nFixture.\n\n## Invariants\n\nNONE\n\n## Durable Scope Boundaries\n\nFixture.\n\n## Non-Goals\n\nNONE\n');
+  write('.project-corpus/state/STATUS.md','# Status\n\nProtocol-Version: 2.0\nProject-ID: fixture\nLifecycle-Status: PAUSED\nActive-Task-ID: NONE\nLast-Verified-At: UNVERIFIED\nEvidence-Class: UNVERIFIED\n\n## Current Verified Baseline\n\nUNVERIFIED\n\n## Blockers\n\nNONE\n\n## Evidence References\n\nNONE\n\n## Exact Next Action\n\nNONE\n');
   write('.project-corpus/policy.toml','project_id = "fixture"\npolicy_version = "2.0"\n');
   for(const d of ['tasks','reports','history']) fs.mkdirSync(path.join(root,'.project-corpus',d));
   write('source.json','{"command":"bounded fixture"}\n'); write('data/user.txt','durable sentinel');

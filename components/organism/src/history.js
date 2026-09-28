@@ -2,6 +2,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const {confined} = require('./paths');
 const {demand, sha} = require('./shared');
 const homeostasis = require('./homeostasis');
@@ -86,7 +87,31 @@ function capture(ctx, views) {
   // Re-check after directory creation to catch links introduced between check and write.
   const checked = historyPath(ctx, true);
   demand(path.resolve(file) === path.resolve(checked), 'HISTORY_PATH_CHANGED');
-  fs.writeFileSync(file, bounded.map(x => JSON.stringify(x)).join('\n') + '\n', 'utf8');
+  const payload = bounded.map(x => JSON.stringify(x)).join('\n') + '\n';
+  const tempRef = `${ctx.runtime}/health-history/.${ctx.projectId}.${crypto.randomBytes(12).toString('hex')}.tmp`;
+  const temp = confined(ctx.root, tempRef, true);
+  let created = false;
+  try {
+    const fd = fs.openSync(temp, 'wx');
+    created = true;
+    try {
+      fs.writeFileSync(fd, payload, 'utf8');
+      fs.fsyncSync(fd);
+    } finally {
+      fs.closeSync(fd);
+    }
+    demand(fs.readFileSync(confined(ctx.root, tempRef), 'utf8') === payload, 'HISTORY_READBACK_FAILED');
+    demand(path.resolve(historyPath(ctx, true)) === path.resolve(file), 'HISTORY_PATH_CHANGED');
+    fs.renameSync(confined(ctx.root, tempRef), historyPath(ctx, true));
+    created = false;
+    demand(fs.readFileSync(historyPath(ctx), 'utf8') === payload, 'HISTORY_READBACK_FAILED');
+  } catch (error) {
+    if (created) {
+      const checkedTemp = confined(ctx.root, tempRef);
+      fs.unlinkSync(checkedTemp);
+    }
+    throw error;
+  }
   return {kind: 'lso_health_history_capture', result: 'WRITTEN', projectId: ctx.projectId,
     snapshotId: snapshot.snapshotId, stateDigestSha256: digest, writePerformed: true,
     retainedSnapshots: bounded.length, authority: 'NON_AUTHORITATIVE_RECORDED_HEALTH'};

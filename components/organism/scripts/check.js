@@ -32,7 +32,13 @@ for (const full of files) {
     }
   }
   if (path.relative(root, full).startsWith('src' + path.sep)) {
-    for (const pattern of [/child_process/, /require\(['"](?:node:)?(?:net|http|https|tls|dgram)['"]\)/, /\b(?:setInterval|setTimeout|fetch)\s*\(/, /\b(?:rmSync|unlinkSync|rmdirSync)\s*\(/, /control_plane/, /graphRoot/]) assert(!pattern.test(text), 'FORBIDDEN_CORE_SURFACE:' + path.basename(full));
+    let coreText = text;
+    if (path.basename(full) === 'history.js') {
+      // Only the same-directory, confined history replacement temp may be removed.
+      assert(text.includes('const checkedTemp = confined(ctx.root, tempRef);') && text.includes('fs.unlinkSync(checkedTemp);'), 'HISTORY_TEMP_CLEANUP_GUARD');
+      coreText = text.replace('fs.unlinkSync(checkedTemp);', '');
+    }
+    for (const pattern of [/child_process/, /require\(['"](?:node:)?(?:net|http|https|tls|dgram)['"]\)/, /\b(?:setInterval|setTimeout|fetch)\s*\(/, /\b(?:rmSync|unlinkSync|rmdirSync)\s*\(/, /control_plane/, /graphRoot/]) assert(!pattern.test(coreText), 'FORBIDDEN_CORE_SURFACE:' + path.basename(full));
     for (const match of text.matchAll(/require\(['"]([^'"]+)['"]\)/g)) {
       const ref = match[1];
       if (ref.startsWith('.')) assert(path.resolve(path.dirname(full), ref).startsWith(path.join(root, 'src') + path.sep), 'PARENT_DEPENDENCY');

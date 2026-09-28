@@ -14,7 +14,9 @@ function buildManifest(ctx) {
     demand(!present || fs.lstatSync(full).isFile(), 'REGULAR_FILE_REQUIRED');
     return {id: s.id, path: s.path, relative_path: s.path, required: s.required, present, sha256: present ? fileHash(full) : null, size: present ? fs.statSync(full).size : null};
   });
-  const ready = corpusAgreement && policyAgreement && sources.every(s => !s.required || s.present);
+  const metadataReady = ctx.adapter.kind !== 'project-corpus-v2-reference'
+    || (Array.isArray(i.metadataIssues) && i.metadataIssues.length === 0 && i.activeTaskId != null);
+  const ready = corpusAgreement && policyAgreement && metadataReady && sources.every(s => !s.required || s.present);
   const projection = {project_id: ctx.projectId, physical_root: ctx.root, identity: i, sources, continuity: a.continuity};
   return {...projection, kind: 'recovery_manifest', scope: ctx.projectId, physical_root: ctx.root,
     identity: {...i, corpus_agreement: corpusAgreement, policy_agreement: policyAgreement},

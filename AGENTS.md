@@ -60,9 +60,9 @@ Path-sensitive organism operations remain confined to an explicit project root a
 
 ## Licensing
 
-The Project Corpus component retains its existing component license.
+The umbrella repository and organism layer are MIT-licensed under the root LICENSE; the organism package also carries its MIT component license.
 
-No license for the independent organism layer or umbrella repository may be inferred from that component. A missing umbrella license remains a publication gate until explicit Owner decision.
+The embedded Project Corpus component retains its own MIT license and attribution. Licensing does not grant publication authority: push, tags, releases and registry publication remain separately Owner-controlled under the Git gates above.
 
 ## CLOSE
 
